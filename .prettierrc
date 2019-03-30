@@ -1,0 +1,8 @@
+{
+  "disableLanguages": ["vue", "ejs"],
+  "printWidth": 130,
+  "semi": false,
+  "singleQuote": true,
+  "arrowParens": "always",
+  "trailingComma": "es5"
+}

@@ -1,19 +1,32 @@
 {
   "defaultSeverity": "warning",
-  "extends": [
-    "tslint:recommended"
-  ],
+  "extends": ["tslint:recommended"],
   "linterOptions": {
-    "exclude": [
-      "node_modules/**"
-    ]
+    "exclude": ["node_modules/**", "src/lib/icons/**"]
   },
   "rules": {
+    "trailing-comma": {
+      "options": {
+        "multiline": {
+          "arrays": "always",
+          "exports": "always",
+          "functions": "ignore",
+          "imports": "always",
+          "objects": "always",
+          "typeLiterals": "never"
+        },
+        "singleline": "never"
+      }
+    },
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
     "interface-name": false,
     "ordered-imports": false,
     "object-literal-sort-keys": false,
+    "max-line-length": false,
+    "member-access": false,
+    "semicolon": [true, "never"],
+    "no-console": [true, "warning"],
     "no-consecutive-blank-lines": false
   }
 }

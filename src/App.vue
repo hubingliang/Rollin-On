@@ -1,29 +1,47 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
+<script lang="ts">
+import { Vue, Component, Prop } from 'vue-property-decorator'
+
+@Component
+export default class App extends Vue {
+  newChannel: string = ''
+  created() {
+    this.login()
+  }
+  async login() {
+    const { data } = await this.$http.get('/login/cellphone?phone=15620688207&password=aqgy3602')
+    const user = {
+      id: data.account.id,
+      avatar: data.profile.avatarUrl,
+      background: data.profile.backgroundUrl,
+      name: data.profile.nickname,
+      signature: data.profile.signature,
+    }
+    sessionStorage.setItem('user', JSON.stringify(user))
+  }
+}
+</script>
+
 <style lang="less">
+* {
+  padding: 0;
+  margin: 0;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
