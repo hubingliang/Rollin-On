@@ -5,7 +5,7 @@
     </Item>
     <Item class="item" v-for="song in dailyList" v-bind:key="song.id">
       <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
-      <section class="song" @mouseover="song.isDiscShow = true" @mouseleave="song.isDiscShow = false">
+      <section class="song" @mouseover="song.isDiscShow = true" @mouseleave="song.isDiscShow = false" @click="updatePlayer(song)">
         <img :src="song.album.picUrl" />
         <section class="details">
           <p class="name">{{ song.name }}</p>
@@ -19,6 +19,7 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import posed from 'vue-pose'
+import { PlayerModule } from '@/store/modules/player'
 
 @Component({
   components: {
@@ -44,6 +45,7 @@ export default class App extends Vue {
   isVisible: boolean = false
   items: number[] = [0, 1, 2, 3, 4]
   dailyList: any[] = []
+  PlayerModule = PlayerModule
   created() {
     this.getDailyList()
   }
@@ -51,6 +53,9 @@ export default class App extends Vue {
     setTimeout(() => {
       this.isVisible = !this.isVisible
     }, 500)
+  }
+  updatePlayer(song: any) {
+    PlayerModule.updatePlayer(song)
   }
   async getDailyList() {
     const { data } = await this.$http.get('/recommend/songs')

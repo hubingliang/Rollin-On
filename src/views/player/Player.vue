@@ -12,9 +12,12 @@
       class="cover"
       :class="{ play: this.play, paused: !this.play }"
       id="cover"
-      :src="PlayerModule.song.albumUrl"
+      :src="PlayerModule.song ? PlayerModule.song.album.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
     />
-    <audio ref="audio" :src="musicUrl"></audio>
+    <audio
+      ref="audio"
+      :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
+    ></audio>
   </section>
 </template>
 
@@ -22,7 +25,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { styler, spring, listen, pointer, value } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
-
+import posed from 'vue-pose'
 
 @Component
 export default class App extends Vue {
@@ -33,13 +36,17 @@ export default class App extends Vue {
   change() {
     // this.play = !this.play
   }
-  das(e: Event) {
-    console.log(e)
-  }
-  ss() {
-    setInterval(() => {
-      this.isVisible = !this.isVisible
-    }, 1000)
+  switch() {
+    const audio: any = this.$refs.audio
+    if (this.PlayerModule.isPlay) {
+      audio.pause()
+      this.PlayerModule.switch(false)
+      this.play = false
+    } else {
+      audio.play()
+      this.PlayerModule.switch(true)
+      this.play = true
+    }
   }
   disc() {
     const disc: any = this.$refs.disc
@@ -72,7 +79,7 @@ export default class App extends Vue {
           // this.lastMusic()
         } else {
           console.log('播放')
-          // this.play()
+          this.switch()
         }
       } else if (endX < -100) {
         this.$router.push({ name: 'home' })
