@@ -1,18 +1,25 @@
 <template>
   <Sidebar class="sidebar" :pose="isVisible ? 'visible' : 'hidden'">
-    <Item>
+    <Item class="title">
       <h2>每日推荐</h2>
     </Item>
-    <Item class="item" v-for="song in dailyList" v-bind:key="song.id">
-      <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
-      <section class="song" @mouseover="song.isDiscShow = true" @mouseleave="song.isDiscShow = false" @click="updatePlayer(song)">
-        <img :src="song.album.picUrl" />
-        <section class="details">
-          <p class="name">{{ song.name }}</p>
-          <span class="author">{{ song.artists[0].name }}</span>
+    <section class="wrapper">
+      <Item class="item" v-for="song in dailyList" v-bind:key="song.id">
+        <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
+        <section
+          class="song"
+          @mouseover="song.isDiscShow = true"
+          @mouseleave="song.isDiscShow = false"
+          @click="updatePlayer(song)"
+        >
+          <img :src="song.album.picUrl" />
+          <section class="details">
+            <p class="name">{{ song.name }}</p>
+            <span class="author">{{ song.artists[0].name }}</span>
+          </section>
         </section>
-      </section>
-    </Item>
+      </Item>
+    </section>
   </Sidebar>
 </template>
 
@@ -46,16 +53,25 @@ export default class App extends Vue {
   items: number[] = [0, 1, 2, 3, 4]
   dailyList: any[] = []
   PlayerModule = PlayerModule
+  audio: HTMLAudioElement = <HTMLAudioElement>document.getElementById('audio')
   created() {
     this.getDailyList()
   }
   mounted() {
+    this.audio = <HTMLAudioElement>document.getElementById('audio')
     setTimeout(() => {
       this.isVisible = !this.isVisible
     }, 500)
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
+    PlayerModule.updatePlayList(this.dailyList)
+    this.$nextTick(() => {
+      console.log(this.audio)
+      this.audio.play()
+
+      this.PlayerModule.switch(true)
+    })
   }
   async getDailyList() {
     const { data } = await this.$http.get('/recommend/songs')
@@ -87,62 +103,68 @@ export default class App extends Vue {
 .sidebar {
   // background: #54e365;
   height: 70vh;
-  padding: 20px;
-  overflow: scroll;
-}
-h2 {
-  color: white;
-  margin-bottom: 20px;
-}
-.item {
-  border-radius: 5px;
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  position: relative;
-  .disc {
-    position: absolute;
-    left: -15px;
-    width: 80px;
-    height: 80px;
-  }
-  .show {
-    animation: showRecord 0.5s;
-    animation-fill-mode: forwards;
-  }
-  .hidden {
-    animation: hiddenRecord 0.5s;
-    animation-fill-mode: forwards;
-  }
-  .song {
-    color: #ffffff;
-    display: flex;
-    flex-wrap: nowrap;
-    position: relative;
-    img {
-      width: 80px;
-      height: 80px;
-      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  .title {
+    padding-left: 15px;
+    h2 {
+      color: white;
     }
-    .details {
-      margin-left: 20px;
-      height: 80px;
+  }
+  .wrapper {
+    overflow-x: scroll;
+    margin-top: 10px;
+    height: calc(100% - 60px);
+    padding-left: 15px;
+    .item {
+      border-radius: 5px;
+      margin-bottom: 25px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      p {
-        font-weight: bold;
-        width: 240px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        margin-bottom: 10px;
+      align-items: center;
+      position: relative;
+      .disc {
+        position: absolute;
+        left: -15px;
+        width: 80px;
+        height: 80px;
       }
-      span {
-        width: 240px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      .show {
+        animation: showRecord 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .hidden {
+        animation: hiddenRecord 0.5s;
+        animation-fill-mode: forwards;
+      }
+      .song {
+        color: #ffffff;
+        display: flex;
+        flex-wrap: nowrap;
+        position: relative;
+        img {
+          width: 80px;
+          height: 80px;
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+        .details {
+          margin-left: 20px;
+          height: 80px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          p {
+            font-weight: bold;
+            width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 10px;
+          }
+          span {
+            width: 240px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
       }
     }
   }

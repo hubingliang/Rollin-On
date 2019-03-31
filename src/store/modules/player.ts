@@ -9,6 +9,7 @@ export interface IPlayer {
 class Player extends VuexModule implements IPlayer {
   song = null
   isPlay = false
+  playList = []
   @Mutation
   updatePlayer(song: any) {
     this.song = Object.assign({}, song)
@@ -18,6 +19,12 @@ class Player extends VuexModule implements IPlayer {
   switch(newStatus: boolean) {
     this.isPlay = newStatus
   }
+
+  @Mutation
+  updatePlayList(playList: any) {
+    this.playList = playList
+  }
+
 }
 
 export const PlayerModule = getModule(Player)

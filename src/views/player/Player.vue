@@ -3,19 +3,20 @@
     <img class="disc" src="@/assets/disc-plus.png" alt="" />
     <img
       class="disc_light"
-      :class="{ play: this.play, paused: !this.play }"
+      :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
       src="@/assets/disc_light-plus.png"
       alt=""
       id="disc"
     />
     <img
       class="cover"
-      :class="{ play: this.play, paused: !this.play }"
+      :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
       id="cover"
       :src="PlayerModule.song ? PlayerModule.song.album.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
     />
     <audio
       ref="audio"
+      id="audio"
       :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
     ></audio>
   </section>
@@ -41,11 +42,9 @@ export default class App extends Vue {
     if (this.PlayerModule.isPlay) {
       audio.pause()
       this.PlayerModule.switch(false)
-      this.play = false
     } else {
       audio.play()
       this.PlayerModule.switch(true)
-      this.play = true
     }
   }
   disc() {
@@ -141,10 +140,10 @@ export default class App extends Vue {
     border-radius: 50%;
   }
   .play {
-    animation: circle 20s infinite linear;
+    animation: circle 30s infinite linear;
   }
   .paused {
-    animation: circle 20s infinite linear;
+    animation: circle 30s infinite linear;
     animation-play-state: paused;
   }
 }
