@@ -48,9 +48,7 @@ import { PlayerModule } from '@/store/modules/player'
   },
 })
 export default class App extends Vue {
-  isDiscShow: boolean = false
   isVisible: boolean = false
-  items: number[] = [0, 1, 2, 3, 4]
   dailyList: any[] = []
   PlayerModule = PlayerModule
   audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
@@ -67,7 +65,6 @@ export default class App extends Vue {
     PlayerModule.updatePlayer(song)
     PlayerModule.updatePlayList(this.dailyList)
     this.$nextTick(() => {
-      console.log(this.audio)
       this.audio.play()
 
       this.PlayerModule.switch(true)
@@ -75,8 +72,7 @@ export default class App extends Vue {
   }
   async getDailyList() {
     const { data } = await this.$http.get('/recommend/songs')
-    console.log(data)
-    this.dailyList = data.playlist.tracks.map((_: any) => {
+    this.dailyList = data.recommend.map((_: any) => {
       _.isDiscShow = false
       return _
     })

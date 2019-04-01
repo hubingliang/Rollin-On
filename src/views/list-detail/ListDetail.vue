@@ -4,13 +4,19 @@
       <h2>{{ playList.name }}</h2>
     </Item>
     <section class="wrapper">
-      <Item class="item" v-for="song in songList" v-bind:key="song.id">
-        <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
+      <Item class="item" v-for="song in playList.tracks" :key="song.id">
+        <img src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow, disc: true }" />
         <section
           class="song"
-          @mouseover="song.isDiscShow = true"
-          @mouseleave="song.isDiscShow = false"
           @click="updatePlayer(song)"
+          @mouseover="
+            song.isDiscShow = true
+            discSwitch('over', song)
+          "
+          @mouseleave="
+            song.isDiscShow = false
+            discSwitch('leave', song)
+          "
         >
           <img v-lazy="song.al.picUrl" />
           <section class="details">
@@ -32,7 +38,7 @@ import { PlayerModule } from '@/store/modules/player'
   components: {
     Sidebar: posed.div({
       visible: {
-        x: 0,
+        // x: 0,
         beforeChildren: true,
         staggerChildren: 30,
       },
@@ -48,15 +54,16 @@ import { PlayerModule } from '@/store/modules/player'
   },
 })
 export default class ListDetail extends Vue {
-  isDiscShow: boolean = false
   isVisible: boolean = false
-  items: number[] = [0, 1, 2, 3, 4]
-  songList: any[] = []
-  playList: any[] = []
+  isDiscShow: boolean = false
+  playList: any = []
   PlayerModule = PlayerModule
   audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
   created() {
     this.getDailyList()
+  }
+  discSwitch(asd: string, song: any) {
+    console.log(song.isDiscShow)
   }
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
@@ -66,7 +73,7 @@ export default class ListDetail extends Vue {
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
-    PlayerModule.updatePlayList(this.songList)
+    PlayerModule.updatePlayList(this.playList.tracks)
     this.$nextTick(() => {
       this.audio.play()
       this.PlayerModule.switch(true)
@@ -75,7 +82,7 @@ export default class ListDetail extends Vue {
   async getDailyList() {
     const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
     this.playList = data.playlist
-    this.songList = data.playlist.tracks.map((_: any) => {
+    this.playList.tracks = this.playList.tracks.map((_: any) => {
       _.isDiscShow = false
       return _
     })
@@ -101,9 +108,8 @@ export default class ListDetail extends Vue {
   }
 }
 .sidebar {
-  // background: #54e365;
   margin-left: 100px;
-  height: 70vh;
+  height: 75vh;
   .title {
     padding-left: 15px;
     h2 {
@@ -113,7 +119,7 @@ export default class ListDetail extends Vue {
   .wrapper {
     overflow-x: scroll;
     margin-top: 10px;
-    height: calc(100% - 60px);
+    height: calc(100% - 20px);
     padding-left: 15px;
     .item {
       border-radius: 5px;
@@ -144,6 +150,7 @@ export default class ListDetail extends Vue {
           width: 80px;
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          user-select: none;
         }
         .details {
           margin-left: 20px;

@@ -126,16 +126,16 @@ export default class App extends Vue {
   position: relative;
   .disc_light {
     position: absolute;
-    width: 330px;
+    width: 48vh;
   }
   .disc {
     position: absolute;
-    width: 330px;
-    height: 330px;
+    width: 48vh;
+    height: 48vh;
   }
   .cover {
-    width: 205px;
-    height: 205px;
+    width: 30vh;
+    height: 30vh;
     position: absolute;
     border-radius: 50%;
   }

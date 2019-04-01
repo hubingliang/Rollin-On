@@ -2,8 +2,12 @@
   <div class="pen">
     <div class="carousel">
       <Item class="item">
-        <!-- <img v-lazy="item.coverImgUrl" /> -->
-        <p>日推</p>
+        <section @click="toListDetail('daily-recommendation')">
+          <div>
+            <span>{{ new Date().getDate() }}</span>
+          </div>
+          <p>日推</p>
+        </section>
       </Item>
       <Item class="item" v-for="item in playList" v-bind:key="item.id">
         <section @click="toListDetail(item.id)">
@@ -49,8 +53,8 @@ import posed from 'vue-pose'
 })
 export default class App extends Vue {
   playList: any[] = []
-  async mounted() {
-    await this.getPlayList()
+  mounted() {
+    this.getPlayList()
     // this.init()
   }
   init() {
@@ -87,8 +91,11 @@ export default class App extends Vue {
     }
   }
   toListDetail(id: string) {
-    console.log('sss')
-    this.$router.push({ name: 'ListDetail', params: { playListId: `${id}` } })
+    if (id === 'daily-recommendation') {
+      this.$router.push({ name: 'DailyRecommendation' })
+    } else {
+      this.$router.push({ name: 'ListDetail', params: { playListId: `${id}` } })
+    }
   }
 }
 </script>
@@ -113,6 +120,19 @@ export default class App extends Vue {
     flex: 0 0 240px;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     user-select: none;
+    div {
+      width: 240px;
+      border-radius: 5px 5px 0 0;
+      height: 240px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #333;
+      span {
+        font-size: 80px;
+        color: #ffffff;
+      }
+    }
     img {
       width: 240px;
       border-radius: 5px 5px 0 0;
