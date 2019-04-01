@@ -12,7 +12,7 @@
       class="cover"
       :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
       id="cover"
-      :src="PlayerModule.song ? PlayerModule.song.album.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
+      :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
     />
     <audio
       ref="audio"
@@ -26,7 +26,6 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { styler, spring, listen, pointer, value } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
-import posed from 'vue-pose'
 
 @Component
 export default class App extends Vue {
@@ -59,14 +58,14 @@ export default class App extends Vue {
     })
 
     listen(document, 'mouseup touchend').start(() => {
-      let endX = ballXY.get().x
-      let endY = ballXY.get().y
+      const endX = ballXY.get().x
+      const endY = ballXY.get().y
       if (endX > 100) {
         // if (this.$store.state.homePage) {
         //   this.$router.push(`/Album/${this.$store.state.currentListName}`)
         //   this.$store.commit('changeComponent', false)
         // } else {
-        this.$router.push({ name: 'DailyRecommendation' })
+        this.$router.push({ name: 'PlayList' })
         //   this.$store.commit('changeComponent', true)
         // }
       } else if (Math.abs(endX) < 100 && endX !== 0) {
@@ -136,6 +135,7 @@ export default class App extends Vue {
   }
   .cover {
     width: 205px;
+    height: 205px;
     position: absolute;
     border-radius: 50%;
   }

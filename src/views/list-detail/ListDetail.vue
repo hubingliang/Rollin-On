@@ -1,10 +1,10 @@
 <template>
   <Sidebar class="sidebar" :pose="isVisible ? 'visible' : 'hidden'">
     <Item class="title">
-      <h2>每日推荐</h2>
+      <h2>{{ playList.name }}</h2>
     </Item>
     <section class="wrapper">
-      <Item class="item" v-for="song in dailyList" v-bind:key="song.id">
+      <Item class="item" v-for="song in songList" v-bind:key="song.id">
         <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
         <section
           class="song"
@@ -12,10 +12,10 @@
           @mouseleave="song.isDiscShow = false"
           @click="updatePlayer(song)"
         >
-          <img v-lazy="song.album.picUrl" />
+          <img v-lazy="song.al.picUrl" />
           <section class="details">
             <p class="name">{{ song.name }}</p>
-            <span class="author">{{ song.artists[0].name }}</span>
+            <span class="author">{{ song.ar[0].name }}</span>
           </section>
         </section>
       </Item>
@@ -47,11 +47,12 @@ import { PlayerModule } from '@/store/modules/player'
     }),
   },
 })
-export default class App extends Vue {
+export default class ListDetail extends Vue {
   isDiscShow: boolean = false
   isVisible: boolean = false
   items: number[] = [0, 1, 2, 3, 4]
-  dailyList: any[] = []
+  songList: any[] = []
+  playList: any[] = []
   PlayerModule = PlayerModule
   audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
   created() {
@@ -65,18 +66,16 @@ export default class App extends Vue {
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
-    PlayerModule.updatePlayList(this.dailyList)
+    PlayerModule.updatePlayList(this.songList)
     this.$nextTick(() => {
-      console.log(this.audio)
       this.audio.play()
-
       this.PlayerModule.switch(true)
     })
   }
   async getDailyList() {
-    const { data } = await this.$http.get('/recommend/songs')
-    console.log(data)
-    this.dailyList = data.playlist.tracks.map((_: any) => {
+    const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
+    this.playList = data.playlist
+    this.songList = data.playlist.tracks.map((_: any) => {
       _.isDiscShow = false
       return _
     })
@@ -88,20 +87,16 @@ export default class App extends Vue {
 @keyframes showRecord {
   0% {
     left: 0;
-    display: none;
   }
   100% {
-    display: block;
     left: -15px;
   }
 }
 @keyframes hiddenRecord {
   0% {
     left: -15px;
-    display: block;
   }
   100% {
-    display: none;
     left: 0;
   }
 }

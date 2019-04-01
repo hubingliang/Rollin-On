@@ -1,12 +1,12 @@
 import { VuexModule, Module, MutationAction, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 
-export interface IPlayer {
+export interface IPlayerState {
   song: any
 }
 
 @Module({ dynamic: true, store, name: 'player' })
-class Player extends VuexModule implements IPlayer {
+class Player extends VuexModule implements IPlayerState {
   song = null
   isPlay = false
   playList = []

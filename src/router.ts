@@ -16,7 +16,17 @@ export default new Router({
         {
           path: 'daily-recommendation',
           name: 'DailyRecommendation',
-          component: () => import(/* webpackChunkName: "about" */ './views/daily-recommendation/DailyRecommendation.vue'),
+          component: () => import('./views/daily-recommendation/DailyRecommendation.vue'),
+        },
+        {
+          path: 'play-list',
+          name: 'PlayList',
+          component: () => import('./views/play-list/PlayList.vue'),
+        },
+        {
+          path: ':playListId/list-detail',
+          name: 'ListDetail',
+          component: () => import('@/views/list-detail/ListDetail.vue'),
         },
       ],
     },

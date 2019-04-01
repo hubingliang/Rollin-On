@@ -10,7 +10,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component
 export default class App extends Vue {
   newChannel: string = ''
-  created() {
+  async created() {
     this.login()
   }
   async login() {

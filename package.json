@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@popmotion/popcorn": "^0.3.4",
     "axios": "^0.18.0",
     "popmotion": "^8.6.4",
     "query-string": "^6.4.2",
