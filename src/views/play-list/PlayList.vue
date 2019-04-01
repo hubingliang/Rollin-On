@@ -92,7 +92,7 @@ export default class App extends Vue {
   }
   toListDetail(id: string) {
     if (id === 'daily-recommendation') {
-      this.$router.push({ name: 'DailyRecommendation' })
+      this.$router.push({ name: 'ListDetail' })
     } else {
       this.$router.push({ name: 'ListDetail', params: { playListId: `${id}` } })
     }

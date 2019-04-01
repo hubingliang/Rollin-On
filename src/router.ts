@@ -14,11 +14,6 @@ export default new Router({
       component: Layout,
       children: [
         {
-          path: 'daily-recommendation',
-          name: 'DailyRecommendation',
-          component: () => import('./views/daily-recommendation/DailyRecommendation.vue'),
-        },
-        {
           path: 'play-list',
           name: 'PlayList',
           component: () => import('./views/play-list/PlayList.vue'),
@@ -26,7 +21,7 @@ export default new Router({
         {
           path: ':playListId/list-detail',
           name: 'ListDetail',
-          component: () => import('@/views/list-detail/ListDetail.vue'),
+          component: () => import('./views/list-details/ListDetails.vue'),
         },
       ],
     },

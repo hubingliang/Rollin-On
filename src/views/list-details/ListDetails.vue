@@ -1,22 +1,16 @@
 <template>
   <Sidebar class="sidebar" :pose="isVisible ? 'visible' : 'hidden'">
     <Item class="title">
-      <h2>{{ playList.name }}</h2>
+      <h2>每日推荐</h2>
     </Item>
     <section class="wrapper">
-      <Item class="item" v-for="song in playList.tracks" :key="song.id">
-        <img src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow, disc: true }" />
+      <Item class="item" v-for="song in playList" v-bind:key="song.id">
+        <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
         <section
           class="song"
+          @mouseover="song.isDiscShow = true"
+          @mouseleave="song.isDiscShow = false"
           @click="updatePlayer(song)"
-          @mouseover="
-            song.isDiscShow = true
-            discSwitch('over', song)
-          "
-          @mouseleave="
-            song.isDiscShow = false
-            discSwitch('leave', song)
-          "
         >
           <img v-lazy="song.al.picUrl" />
           <section class="details">
@@ -38,7 +32,7 @@ import { PlayerModule } from '@/store/modules/player'
   components: {
     Sidebar: posed.div({
       visible: {
-        // x: 0,
+        x: 0,
         beforeChildren: true,
         staggerChildren: 30,
       },
@@ -53,17 +47,13 @@ import { PlayerModule } from '@/store/modules/player'
     }),
   },
 })
-export default class ListDetail extends Vue {
+export default class DailyRecommendation extends Vue {
   isVisible: boolean = false
-  isDiscShow: boolean = false
-  playList: any = []
+  playList: any[] = []
   PlayerModule = PlayerModule
   audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
   created() {
-    this.getDailyList()
-  }
-  discSwitch(asd: string, song: any) {
-    console.log(song.isDiscShow)
+    this.getPlayList()
   }
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
@@ -73,19 +63,33 @@ export default class ListDetail extends Vue {
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
-    PlayerModule.updatePlayList(this.playList.tracks)
+    PlayerModule.updatePlayList(this.playList)
     this.$nextTick(() => {
       this.audio.play()
+
       this.PlayerModule.switch(true)
     })
   }
-  async getDailyList() {
-    const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
-    this.playList = data.playlist
-    this.playList.tracks = this.playList.tracks.map((_: any) => {
-      _.isDiscShow = false
-      return _
-    })
+  async getPlayList() {
+    if (this.$route.params.playListId) {
+      const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
+      this.playList = data.playlist.tracks.map((_: any) => {
+        _.isDiscShow = false
+        return _
+      })
+      console.log(data.playlist.tracks)
+    } else {
+      const { data } = await this.$http.get('/recommend/songs')
+      this.playList = data.recommend.map((_: any) => {
+        console.log(_)
+        _.al = {
+          picUrl: _.album.picUrl,
+        }
+        _.ar = [{ name: _.artists[0].name }]
+        _.isDiscShow = false
+        return _
+      })
+    }
   }
 }
 </script>
@@ -94,22 +98,27 @@ export default class ListDetail extends Vue {
 @keyframes showRecord {
   0% {
     left: 0;
+    display: none;
   }
   100% {
+    display: block;
     left: -15px;
   }
 }
 @keyframes hiddenRecord {
   0% {
     left: -15px;
+    display: block;
   }
   100% {
+    display: none;
     left: 0;
   }
 }
 .sidebar {
+  // background: #54e365;
   margin-left: 100px;
-  height: 75vh;
+  height: 70vh;
   .title {
     padding-left: 15px;
     h2 {
@@ -119,7 +128,7 @@ export default class ListDetail extends Vue {
   .wrapper {
     overflow-x: scroll;
     margin-top: 10px;
-    height: calc(100% - 20px);
+    height: calc(100% - 60px);
     padding-left: 15px;
     .item {
       border-radius: 5px;
@@ -150,7 +159,6 @@ export default class ListDetail extends Vue {
           width: 80px;
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-          user-select: none;
         }
         .details {
           margin-left: 20px;
