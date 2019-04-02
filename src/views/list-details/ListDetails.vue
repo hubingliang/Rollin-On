@@ -10,9 +10,8 @@
           class="song"
           @mouseover="song.isDiscShow = true"
           @mouseleave="song.isDiscShow = false"
-          @click="updatePlayer({ song: song, index: index })"
         >
-          <img v-lazy="song.al.picUrl" />
+          <img v-lazy="song.al.picUrl" @click="updatePlayer({ song: song, index: index })"/>
           <section class="details">
             <p class="name">{{ song.name }}</p>
             <span class="author">{{ song.ar[0].name }}</span>
@@ -146,6 +145,7 @@ export default class DailyRecommendation extends Vue {
         left: -15px;
         width: 80px;
         height: 80px;
+        user-select: none;
       }
       .show {
         animation: showRecord 0.5s;
@@ -164,6 +164,7 @@ export default class DailyRecommendation extends Vue {
           width: 80px;
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+          user-select: none;
         }
         .details {
           margin-left: 20px;

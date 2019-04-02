@@ -1,6 +1,6 @@
 <template>
   <section class="player">
-    <section ref="disc" class="discBox" @click="change" @ondblclick="showControler = true">
+    <section ref="disc" class="discBox">
       <img class="disc" src="@/assets/disc-plus.png" alt="" />
       <img
         class="disc_light"
@@ -19,10 +19,7 @@
         ref="audio"
         id="audio"
         :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
-        @onTimeUpdate="handleTimeUpdate()"
-      >
-        >
-      </audio>
+      ></audio>
     </section>
     <section class="controler">
       <svg class="icon" aria-hidden="true">
@@ -31,9 +28,9 @@
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-addto"></use>
       </svg>
-      <div class="progressBar" ref="ProgressBar">
-        <div class="complete"></div>
-        <div class="circle" ref="circle"></div>
+      <div class="progressBar" ref="progressBar">
+        <div class="complete" :style="{ width: playOut + 'px' }"></div>
+        <div class="circle" :style="{ transform: 'translateX(' + playOut + 'px)' }" ref="circle"></div>
       </div>
     </section>
   </section>
@@ -46,57 +43,47 @@ import { PlayerModule } from '@/store/modules/player'
 
 @Component
 export default class Player extends Vue {
-  play: boolean = false
-  isVisible: boolean = true
-  musicUrl: string = ''
-  showControler: boolean = false
   PlayerModule = PlayerModule
-
-  @Watch('PlayerModule', { deep: true })
-  onPersonChanged1(val: Player, oldVal: Player) {
-    console.log(val)
-    console.log('old', oldVal)
+  audio: any = null
+  playOut: number = 0
+  ProgressBar: any = 0
+  raf: any = null
+  mounted() {
+    this.audio = this.$refs.audio
+    this.ProgressBar = this.$refs.progressBar
+    this.initDisc()
+    this.initProgressBar()
+    this.updateProgress()
   }
-
-  change() {
-    // this.play = !this.play
-  }
-  handleTimeUpdate() {
-    const audio: any = this.$refs.audio
-    if (audio.currentTime <= audio.currentTotalTime - 1) {
-      // this.setState({
-      //   currentTime: this.lectureAudio.currentTime,
-      // })
-    }
+  updateProgress() {
+    this.playOut = (this.audio.currentTime / this.audio.duration) * this.ProgressBar.offsetWidth
+    this.raf = requestAnimationFrame(this.updateProgress)
   }
   nextMusic() {
-    const audio: any = this.$refs.audio
     if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
       PlayerModule.updatePlayer({ song: PlayerModule.playList[PlayerModule.songIndex + 1], index: PlayerModule.songIndex + 1 })
     } else {
       PlayerModule.updatePlayer({ song: PlayerModule.playList[0], index: 0 })
     }
     this.$nextTick(() => {
-      audio.play()
+      this.audio.play()
       PlayerModule.switch(true)
     })
   }
   switch() {
-    const audio: any = this.$refs.audio
     if (this.PlayerModule.isPlay) {
-      audio.pause()
+      this.audio.pause()
       this.PlayerModule.switch(false)
     } else {
-      audio.play()
+      this.audio.play()
       this.PlayerModule.switch(true)
     }
   }
-  disc() {
+  initDisc() {
     const disc: any = this.$refs.disc
-    const audio: any = this.$refs.audio
     const divStyler = styler(disc)
     const ballXY: any = value({ x: 0, y: 0 }, divStyler.set)
-    audio.onended = () => this.nextMusic()
+    this.audio.onended = () => this.nextMusic()
     listen(disc, 'mousedown touchstart').start((e: any) => {
       e.preventDefault()
       pointer(ballXY.get()).start(ballXY)
@@ -133,14 +120,25 @@ export default class Player extends Vue {
   }
   initProgressBar() {
     const mix = calc.getValueFromProgress
-    const boundaries = this.$refs.ProgressBar as HTMLElement
+    const boundaries = this.$refs.progressBar as HTMLElement
     const box = this.$refs.circle as HTMLElement
     const getBoundariesWidth = () => boundaries.getBoundingClientRect().width - box.getBoundingClientRect().width
-
     const divStyler = styler(box)
-    const boxX: any = value(0, (v: any) => divStyler.set('x', v))
+    const boxX: any = value(0, (v: any) => {
+      // const ratio = v / getBoundariesWidth()
+      // if (ratio >= 1) {
+      //   this.audio.currentTime = this.audio.duration
+      // } else if (ratio <= 0) {
+      //   this.audio.currentTime = 0
+      // } else {
+      //   this.audio.currentTime = (v / getBoundariesWidth()) * this.audio.duration
+      // }
+      // console.log(v)
+      divStyler.set('x', v)
+    })
 
     listen(box, 'mousedown touchstart').start(() => {
+      cancelAnimationFrame(this.raf)
       const max = getBoundariesWidth()
       const tug = 0.2
 
@@ -154,7 +152,7 @@ export default class Player extends Vue {
         return v
       }
 
-      pointer({ x: boxX.get() })
+      pointer({ x: this.playOut })
         .pipe(
           ({ x }: any) => x,
           applyOverdrag
@@ -163,32 +161,41 @@ export default class Player extends Vue {
     })
 
     listen(document, 'mouseup touchend').start(() => {
-      inertia({
-        min: 0,
-        max: getBoundariesWidth(),
-        from: boxX.get(),
-        // velocity: boxX.getVelocity(),
-        power: 0.6,
-        bounceStiffness: 400,
-        bounceDamping: 20,
-      }).start(boxX)
+      this.$nextTick(() => {
+        this.raf = requestAnimationFrame(this.updateProgress)
+      })
+      if (boxX.get() >= getBoundariesWidth()) {
+        this.audio.currentTime = this.audio.duration
+        inertia({
+          min: 0,
+          max: getBoundariesWidth(),
+          from: getBoundariesWidth(),
+          // velocity: boxX.getVelocity(),
+          power: 0.6,
+          bounceDamping: 20,
+        }).start(boxX)
+      } else if (boxX.get() <= 0) {
+        this.audio.currentTime = 0
+        inertia({
+          min: 0,
+          max: getBoundariesWidth(),
+          from: 0,
+          // velocity: boxX.getVelocity(),
+          power: 0.6,
+          bounceDamping: 20,
+        }).start(boxX)
+      } else {
+        this.audio.currentTime = (boxX.get() / getBoundariesWidth()) * this.audio.duration
+        inertia({
+          min: 0,
+          max: getBoundariesWidth(),
+          from: boxX.get(),
+          // velocity: boxX.getVelocity(),
+          power: 0.6,
+          bounceDamping: 20,
+        }).start(boxX)
+      }
     })
-
-    // inertia({
-    //   min: 0,
-    //   max: getBoundariesWidth(),
-    //   from: 24,
-    //   // velocity: boxX.getVelocity(),
-    //   power: 0.6,
-    //   bounceStiffness: 400,
-    //   bounceDamping: 20,
-    // }).start(boxX)
-  }
-  mounted() {
-    // this.login()
-    // this.ss()
-    this.disc()
-    this.initProgressBar()
   }
 }
 </script>

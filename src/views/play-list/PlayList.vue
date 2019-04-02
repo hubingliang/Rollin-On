@@ -112,6 +112,7 @@ export default class App extends Vue {
   height: 38vh;
   overflow: scroll;
   padding: 60px 20px;
+  user-select: none;
   .item {
     background: #ffffff;
     border-radius: 5px;
