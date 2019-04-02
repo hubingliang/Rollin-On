@@ -1,16 +1,16 @@
 <template>
   <Sidebar class="sidebar" :pose="isVisible ? 'visible' : 'hidden'">
     <Item class="title">
-      <h2>每日推荐</h2>
+      <h1>{{ name ? name : '日推' }}</h1>
     </Item>
     <section class="wrapper">
-      <Item class="item" v-for="song in playList" v-bind:key="song.id">
+      <Item class="item" v-for="(song, index) in playList" v-bind:key="song.id">
         <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
         <section
           class="song"
           @mouseover="song.isDiscShow = true"
           @mouseleave="song.isDiscShow = false"
-          @click="updatePlayer(song)"
+          @click="updatePlayer({ song: song, index: index })"
         >
           <img v-lazy="song.al.picUrl" />
           <section class="details">
@@ -51,44 +51,48 @@ export default class DailyRecommendation extends Vue {
   isVisible: boolean = false
   playList: any[] = []
   PlayerModule = PlayerModule
+  name: string = ''
   audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
   created() {
     this.getPlayList()
   }
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
-    setTimeout(() => {
-      this.isVisible = !this.isVisible
-    }, 500)
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
     PlayerModule.updatePlayList(this.playList)
     this.$nextTick(() => {
       this.audio.play()
-
-      this.PlayerModule.switch(true)
+      PlayerModule.switch(true)
     })
   }
   async getPlayList() {
-    if (this.$route.params.playListId) {
-      const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
-      this.playList = data.playlist.tracks.map((_: any) => {
-        _.isDiscShow = false
-        return _
-      })
-      console.log(data.playlist.tracks)
-    } else {
-      const { data } = await this.$http.get('/recommend/songs')
-      this.playList = data.recommend.map((_: any) => {
-        console.log(_)
-        _.al = {
-          picUrl: _.album.picUrl,
-        }
-        _.ar = [{ name: _.artists[0].name }]
-        _.isDiscShow = false
-        return _
-      })
+    try {
+      if (this.$route.params.playListId) {
+        const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
+        this.name = data.playlist.name
+        this.playList = data.playlist.tracks.map((_: any) => {
+          _.isDiscShow = false
+          return _
+        })
+      } else {
+        const { data } = await this.$http.get('/recommend/songs')
+        console.log(data)
+        this.name = data.name
+        this.playList = data.recommend.map((_: any) => {
+          _.al = {
+            picUrl: _.album.picUrl,
+          }
+          _.ar = [{ name: _.artists[0].name }]
+          _.isDiscShow = false
+          return _
+        })
+      }
+    } catch (e) {
+      alert(e)
+    } finally {
+      this.isVisible = !this.isVisible
     }
   }
 }
@@ -121,7 +125,8 @@ export default class DailyRecommendation extends Vue {
   height: 70vh;
   .title {
     padding-left: 15px;
-    h2 {
+    margin-bottom: 20px;
+    h1 {
       color: white;
     }
   }

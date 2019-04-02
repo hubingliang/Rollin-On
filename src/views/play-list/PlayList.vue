@@ -102,7 +102,6 @@ export default class App extends Vue {
 
 <style lang="less" scoped>
 .pen {
-  // flex: 1 1 100%;
   width: 44%;
   max-width: 600px;
   padding: 0 20px;
@@ -110,20 +109,20 @@ export default class App extends Vue {
 }
 .carousel {
   display: flex;
-  height: 300px;
+  height: 38vh;
   overflow: scroll;
   padding: 60px 20px;
   .item {
     background: #ffffff;
     border-radius: 5px;
     margin-right: 20px;
-    flex: 0 0 240px;
+    flex: 0 0 30vh;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     user-select: none;
     div {
-      width: 240px;
+      width: 30vh;
       border-radius: 5px 5px 0 0;
-      height: 240px;
+      height: 30vh;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -134,16 +133,16 @@ export default class App extends Vue {
       }
     }
     img {
-      width: 240px;
+      width: 30vh;
+      height: 30vh;
       border-radius: 5px 5px 0 0;
-      height: 240px;
     }
     p {
       padding: 10px;
+      width: calc(30vh - 20px);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      width: 220px;
       font-weight: bold;
     }
   }

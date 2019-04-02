@@ -3,6 +3,9 @@ import store from '@/store'
 
 export interface IPlayerState {
   song: any
+  isPlay: boolean
+  playList: any[]
+  songIndex: number
 }
 
 @Module({ dynamic: true, store, name: 'player' })
@@ -10,9 +13,12 @@ class Player extends VuexModule implements IPlayerState {
   song = null
   isPlay = false
   playList = []
+  songIndex = 0
+  
   @Mutation
   updatePlayer(song: any) {
-    this.song = Object.assign({}, song)
+    this.song = song.song
+    this.songIndex = song.index
   }
 
   @Mutation
@@ -24,7 +30,6 @@ class Player extends VuexModule implements IPlayerState {
   updatePlayList(playList: any) {
     this.playList = playList
   }
-
 }
 
 export const PlayerModule = getModule(Player)

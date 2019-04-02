@@ -1,40 +1,86 @@
 <template>
-  <section ref="disc" class="discBox" @click="change">
-    <img class="disc" src="@/assets/disc-plus.png" alt="" />
-    <img
-      class="disc_light"
-      :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
-      src="@/assets/disc_light-plus.png"
-      alt=""
-      id="disc"
-    />
-    <img
-      class="cover"
-      :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
-      id="cover"
-      :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
-    />
-    <audio
-      ref="audio"
-      id="audio"
-      :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
-    ></audio>
+  <section class="player">
+    <section ref="disc" class="discBox" @click="change" @ondblclick="showControler = true">
+      <img class="disc" src="@/assets/disc-plus.png" alt="" />
+      <img
+        class="disc_light"
+        :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
+        src="@/assets/disc_light-plus.png"
+        alt=""
+        id="disc"
+      />
+      <img
+        class="cover"
+        :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
+        id="cover"
+        :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
+      />
+      <audio
+        ref="audio"
+        id="audio"
+        :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
+        @onTimeUpdate="handleTimeUpdate()"
+      >
+        >
+      </audio>
+    </section>
+    <section class="controler">
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-collection"></use>
+      </svg>
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-addto"></use>
+      </svg>
+      <div class="progressBar" ref="ProgressBar">
+        <div class="complete"></div>
+        <div class="circle" ref="circle"></div>
+      </div>
+    </section>
   </section>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
-import { styler, spring, listen, pointer, value } from 'popmotion'
+import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { styler, spring, inertia, listen, pointer, value, calc } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
 
 @Component
-export default class App extends Vue {
+export default class Player extends Vue {
   play: boolean = false
   isVisible: boolean = true
   musicUrl: string = ''
+  showControler: boolean = false
   PlayerModule = PlayerModule
+
+  @Watch('PlayerModule', { deep: true })
+  onPersonChanged1(val: Player, oldVal: Player) {
+    console.log(val)
+    console.log('old', oldVal)
+  }
+
   change() {
     // this.play = !this.play
+  }
+  handleTimeUpdate() {
+    const audio: any = this.$refs.audio
+    if (audio.currentTime <= audio.currentTotalTime - 1) {
+      // this.setState({
+      //   currentTime: this.lectureAudio.currentTime,
+      // })
+    } else {
+    }
+  }
+  nextMusic() {
+    const audio: any = this.$refs.audio
+    if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
+      PlayerModule.updatePlayer({ song: PlayerModule.playList[PlayerModule.songIndex + 1], index: PlayerModule.songIndex + 1 })
+    } else {
+      PlayerModule.updatePlayer({ song: PlayerModule.playList[0], index: 0 })
+    }
+    this.$nextTick(() => {
+      audio.play()
+      PlayerModule.switch(true)
+    })
   }
   switch() {
     const audio: any = this.$refs.audio
@@ -51,7 +97,7 @@ export default class App extends Vue {
     const audio: any = this.$refs.audio
     const divStyler = styler(disc)
     const ballXY: any = value({ x: 0, y: 0 }, divStyler.set)
-    // audio.onended = () => this.nextMusic()
+    audio.onended = () => this.nextMusic()
     listen(disc, 'mousedown touchstart').start((e: any) => {
       e.preventDefault()
       pointer(ballXY.get()).start(ballXY)
@@ -61,16 +107,10 @@ export default class App extends Vue {
       const endX = ballXY.get().x
       const endY = ballXY.get().y
       if (endX > 100) {
-        // if (this.$store.state.homePage) {
-        //   this.$router.push(`/Album/${this.$store.state.currentListName}`)
-        //   this.$store.commit('changeComponent', false)
-        // } else {
         this.$router.push({ name: 'PlayList' })
-        //   this.$store.commit('changeComponent', true)
-        // }
       } else if (Math.abs(endX) < 100 && endX !== 0) {
         if (endY > 150) {
-          // this.nextMusic()
+          this.nextMusic()
           console.log('下一首')
         } else if (endY < -150) {
           console.log('上一首')
@@ -81,14 +121,6 @@ export default class App extends Vue {
         }
       } else if (endX < -100) {
         this.$router.push({ name: 'home' })
-
-        // if (this.$store.state.homePage) {
-        //   this.$store.commit('changeComponent', false)
-        //   this.$router.push('/Describe')
-        // } else {
-        //   this.$store.commit('changeComponent', true)
-        //   this.$router.push('/')
-        // }
       }
       spring({
         from: ballXY.get(),
@@ -100,10 +132,60 @@ export default class App extends Vue {
       }).start(ballXY)
     })
   }
+  initProgressBar() {
+    const mix = calc.getValueFromProgress
+    const boundaries = this.$refs.ProgressBar as HTMLElement
+    const box = this.$refs.circle as HTMLElement
+    const getBoundariesWidth = () => boundaries.getBoundingClientRect().width - box.getBoundingClientRect().width
+
+    const divStyler = styler(box)
+    const boxX: any = value(0, (v: any) => divStyler.set('x', v))
+
+    listen(box, 'mousedown touchstart').start(() => {
+      const max = getBoundariesWidth()
+      const tug = 0.2
+
+      const applyOverdrag = (v: any) => {
+        if (v < 0) return mix(0, v, tug)
+        if (v > max) return mix(max, v, tug)
+        return v
+      }
+
+      pointer({ x: boxX.get() })
+        .pipe(
+          ({ x }: any) => x,
+          applyOverdrag
+        )
+        .start(boxX)
+    })
+
+    listen(document, 'mouseup touchend').start(() => {
+      inertia({
+        min: 0,
+        max: getBoundariesWidth(),
+        from: boxX.get(),
+        // velocity: boxX.getVelocity(),
+        power: 0.6,
+        bounceStiffness: 400,
+        bounceDamping: 20,
+      }).start(boxX)
+    })
+
+    // inertia({
+    //   min: 0,
+    //   max: getBoundariesWidth(),
+    //   from: 24,
+    //   // velocity: boxX.getVelocity(),
+    //   power: 0.6,
+    //   bounceStiffness: 400,
+    //   bounceDamping: 20,
+    // }).start(boxX)
+  }
   mounted() {
     // this.login()
     // this.ss()
     this.disc()
+    this.initProgressBar()
   }
 }
 </script>
@@ -117,34 +199,79 @@ export default class App extends Vue {
     transform: rotate(360deg);
   }
 }
-.discBox {
-  width: 330px;
-  height: 330px;
+.player {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  .disc_light {
-    position: absolute;
-    width: 48vh;
+  flex-direction: column;
+  .discBox {
+    width: 330px;
+    height: 330px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    .disc_light {
+      position: absolute;
+      width: 48vh;
+    }
+    .disc {
+      position: absolute;
+      width: 48vh;
+      height: 48vh;
+    }
+    .cover {
+      width: 30vh;
+      height: 30vh;
+      position: absolute;
+      border-radius: 50%;
+    }
+    .play {
+      animation: circle 30s infinite linear;
+    }
+    .paused {
+      animation: circle 30s infinite linear;
+      animation-play-state: paused;
+    }
   }
-  .disc {
-    position: absolute;
-    width: 48vh;
-    height: 48vh;
-  }
-  .cover {
-    width: 30vh;
-    height: 30vh;
-    position: absolute;
-    border-radius: 50%;
-  }
-  .play {
-    animation: circle 30s infinite linear;
-  }
-  .paused {
-    animation: circle 30s infinite linear;
-    animation-play-state: paused;
+  .controler {
+    display: flex;
+    justify-content: space-around;
+    padding: 40px 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    .icon {
+      fill: #ffffff;
+      width: 32px;
+      height: 32px;
+      display: none;
+    }
+    .progressBar {
+      display: flex;
+      align-items: center;
+      height: 5px;
+      position: relative;
+      background: #ffffff;
+      width: 80%;
+      border-radius: 5px;
+      position: relative;
+      .complete {
+        position: absolute;
+        left: 0;
+        width: 100px;
+        background: #6dc1f9;
+        height: 5px;
+        border-radius: 5px;
+      }
+      .circle {
+        background: #ffffff;
+        background: #6dc1f9;
+        border-radius: 50%;
+        margin-right: 15px;
+        flex: 0 0 20px;
+        height: 20px;
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      }
+    }
   }
 }
 </style>
