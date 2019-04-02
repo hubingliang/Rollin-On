@@ -9,7 +9,7 @@ import axios from '@/lib/axios'
 Vue.config.productionTip = false
 Vue.use(axios)
 Vue.use(VueLazyload, {
-  listenEvents: [ 'scroll' ]
+  listenEvents: [ 'scroll' ],
 })
 
 new Vue({

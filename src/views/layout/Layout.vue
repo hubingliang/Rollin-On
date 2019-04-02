@@ -23,7 +23,7 @@ export default class Layout extends Vue {}
   background: linear-gradient(to bottom, #f45c43, #eb3349); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   width: 145.5vh;
   height: 90vh;
-  border-radius: 20px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;

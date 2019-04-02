@@ -67,7 +67,6 @@ export default class Player extends Vue {
       // this.setState({
       //   currentTime: this.lectureAudio.currentTime,
       // })
-    } else {
     }
   }
   nextMusic() {
@@ -146,8 +145,12 @@ export default class Player extends Vue {
       const tug = 0.2
 
       const applyOverdrag = (v: any) => {
-        if (v < 0) return mix(0, v, tug)
-        if (v > max) return mix(max, v, tug)
+        if (v < 0) {
+          return mix(0, v, tug)
+        }
+        if (v > max) {
+          return mix(max, v, tug)
+        }
         return v
       }
 

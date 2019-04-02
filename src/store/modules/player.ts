@@ -14,7 +14,6 @@ class Player extends VuexModule implements IPlayerState {
   isPlay = false
   playList = []
   songIndex = 0
-  
   @Mutation
   updatePlayer(song: any) {
     this.song = song.song
