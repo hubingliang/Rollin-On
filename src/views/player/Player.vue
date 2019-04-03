@@ -21,7 +21,7 @@
         :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
       ></audio>
     </section>
-    <section class="controler">
+    <section class="controler" ref="controler">
       <svg class="icon" aria-hidden="true">
         <use xlink:href="#icon-collection"></use>
       </svg>
@@ -48,6 +48,7 @@ export default class Player extends Vue {
   playOut: number = 0
   ProgressBar: any = 0
   raf: any = null
+  currentLocation: number = 0
   mounted() {
     this.audio = this.$refs.audio
     this.ProgressBar = this.$refs.progressBar
@@ -125,18 +126,9 @@ export default class Player extends Vue {
     const getBoundariesWidth = () => boundaries.getBoundingClientRect().width - box.getBoundingClientRect().width
     const divStyler = styler(box)
     const boxX: any = value(0, (v: any) => {
-      // const ratio = v / getBoundariesWidth()
-      // if (ratio >= 1) {
-      //   this.audio.currentTime = this.audio.duration
-      // } else if (ratio <= 0) {
-      //   this.audio.currentTime = 0
-      // } else {
-      //   this.audio.currentTime = (v / getBoundariesWidth()) * this.audio.duration
-      // }
-      // console.log(v)
       divStyler.set('x', v)
+      this.playOut = v
     })
-
     listen(box, 'mousedown touchstart').start(() => {
       cancelAnimationFrame(this.raf)
       const max = getBoundariesWidth()
@@ -160,26 +152,26 @@ export default class Player extends Vue {
         .start(boxX)
     })
 
-    listen(document, 'mouseup touchend').start(() => {
-      this.$nextTick(() => {
-        this.raf = requestAnimationFrame(this.updateProgress)
-      })
-      if (boxX.get() >= getBoundariesWidth()) {
-        this.audio.currentTime = this.audio.duration
-        inertia({
-          min: 0,
-          max: getBoundariesWidth(),
-          from: getBoundariesWidth(),
-          // velocity: boxX.getVelocity(),
-          power: 0.6,
-          bounceDamping: 20,
-        }).start(boxX)
-      } else if (boxX.get() <= 0) {
+    listen(boundaries, 'mouseup touchend').start(() => {
+      console.log(boxX.get())
+      if (boxX.get() === 0 || boxX.get() === this.currentLocation) {
+        return
+      } else if (boxX.get() < 0) {
         this.audio.currentTime = 0
         inertia({
           min: 0,
           max: getBoundariesWidth(),
           from: 0,
+          // velocity: boxX.getVelocity(),
+          power: 0.6,
+          bounceDamping: 20,
+        }).start(boxX)
+      } else if (boxX.get() >= getBoundariesWidth()) {
+        this.audio.currentTime = this.audio.duration
+        inertia({
+          min: 0,
+          max: getBoundariesWidth(),
+          from: getBoundariesWidth(),
           // velocity: boxX.getVelocity(),
           power: 0.6,
           bounceDamping: 20,
@@ -195,6 +187,8 @@ export default class Player extends Vue {
           bounceDamping: 20,
         }).start(boxX)
       }
+      this.currentLocation = boxX.get()
+      requestAnimationFrame(this.updateProgress)
     })
   }
 }
