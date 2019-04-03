@@ -22,12 +22,14 @@
       ></audio>
     </section>
     <section class="controler" ref="controler">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-collection"></use>
-      </svg>
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-addto"></use>
-      </svg>
+      <section class="iconBox">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-collection"></use>
+        </svg>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-addto"></use>
+        </svg>
+      </section>
       <div class="progressBar" ref="progressBar">
         <div class="complete" :style="{ width: playOut + 'px' }"></div>
         <div class="circle" :style="{ transform: 'translateX(' + playOut + 'px)' }" ref="circle"></div>
@@ -239,15 +241,20 @@ export default class Player extends Vue {
   .controler {
     display: flex;
     justify-content: space-around;
-    padding: 40px 0;
+    padding: 20px 0;
     width: 100%;
     flex-direction: column;
     align-items: center;
-    .icon {
-      fill: #ffffff;
-      width: 32px;
-      height: 32px;
-      display: none;
+    .iconBox {
+      width: 60%;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+      .icon {
+        fill: #ffffff;
+        width: 32px;
+        height: 32px;
+      }
     }
     .progressBar {
       display: flex;

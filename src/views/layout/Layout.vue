@@ -1,5 +1,5 @@
 <template>
-  <section class="app-wrapper">
+  <section class="app-wrapper" ref="layout">
     <player></player>
     <router-view />
   </section>
@@ -7,13 +7,27 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Player from '@/views/player/Player.vue'
+import { keyframes, easing, styler } from 'popmotion'
 
 @Component({
   components: {
     Player,
   },
 })
-export default class Layout extends Vue {}
+export default class Layout extends Vue {
+  mounted() {
+    this.initLayout()
+  }
+  initLayout() {
+    const layout: any = styler(this.$refs.layout as HTMLElement)
+    keyframes({
+      values: ['#FF1C68', '#14D790', '#198FE3', '#FF1C68'],
+      duration: 10000,
+      ease: easing.linear,
+      loop: Infinity,
+    }).start(layout.set('background'))
+  }
+}
 </script>
 
 <style lang="less" scoped>
