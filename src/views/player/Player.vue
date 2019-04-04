@@ -35,7 +35,7 @@
         <div
           :pose="circleVisible ? 'visible' : 'hidden'"
           class="circle"
-          :style="{ transform: 'translateX(' + playOut + 'px)', background: color }"
+          :style="{ transform: 'translateX(' + (playOut - 2) + 'px)', background: color }"
           ref="circle"
         ></div>
       </div>
@@ -295,9 +295,9 @@ export default class Player extends Vue {
         background: #6dc1f9;
         border-radius: 50%;
         margin-right: 15px;
-        width: 20px;
-        height: 20px;
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        width: 15px;
+        height: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
       }
     }
   }
