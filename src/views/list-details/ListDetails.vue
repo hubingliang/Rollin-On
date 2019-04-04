@@ -123,14 +123,14 @@ export default class DailyRecommendation extends Vue {
   margin-left: 100px;
   height: 70vh;
   .title {
-    padding-left: 15px;
+    padding-left: 24px;
     margin-bottom: 20px;
   }
   .wrapper {
     overflow-x: scroll;
     margin-top: 10px;
     height: calc(100% - 60px);
-    padding-left: 15px;
+    padding-left: 24px;
     .item {
       border-radius: 5px;
       margin-bottom: 25px;
@@ -160,7 +160,7 @@ export default class DailyRecommendation extends Vue {
           width: 80px;
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-          box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+          // box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
           user-select: none;
         }
         .details {

@@ -57,14 +57,25 @@ export default class Layout extends Vue {
   PlayerModule = PlayerModule
   themeColorList: IThemeColor[] = [
     { background: 'linear-gradient(to bottom, #f7bb97, #dd5e89)', name: 'V a p o r w a v e', type: 'dark' },
-    { background: 'linear-gradient(to bottom, #F45C43, #EB3349)', name: 'Cherry', type: 'dark' },
-    { background: 'linear-gradient(to bottom, #93F9B9, #1D976C)', name: 'Mojito', type: 'light' },
+    // { background: 'linear-gradient(to bottom, #F45C43, #EB3349)', name: 'Cherry', type: 'dark' },
+    // { background: 'linear-gradient(to bottom, #93F9B9, #1D976C)', name: 'Mojito', type: 'light' },
     { background: 'linear-gradient(to bottom, #FFC837, #FF8008)', name: 'Juicy Orange', type: 'light' },
     { background: 'linear-gradient(to bottom, #71B280, #134E5E)', name: 'Moss', type: 'dark' },
     { background: 'linear-gradient(to bottom, #414345, #232526)', name: 'Midnight City', type: 'dark' },
     { background: 'linear-gradient(to bottom, #93EDC7, #1CD8D2)', name: 'Sea Blizz', type: 'light' },
     { background: 'linear-gradient(to bottom, #FFFFFF, #ECE9E6)', name: 'Clouds', type: 'light' },
     { background: 'linear-gradient(to bottom, #F3A183, #EC6F66)', name: 'Bourbon', type: 'dark' },
+    { background: 'linear-gradient(to right, #3A6073, #16222A)', name: 'Mirage', type: 'dark' },
+    { background: 'linear-gradient(to top, #DD2476, #FF512F)', name: 'Bloody Mary', type: 'dark' },
+    { background: 'linear-gradient(to top, #ffdde1, #ee9ca7)', name: 'Piggy Pink', type: 'light' },
+    { background: 'linear-gradient(to top, #6dd5ed, #2193b0)', name: 'Cool Blues', type: 'light' },
+
+
+
+
+
+
+
   ]
   created() {
     PlayerModule.initColor(getColor())

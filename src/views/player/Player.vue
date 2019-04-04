@@ -23,11 +23,11 @@
     </section>
     <section class="controler" ref="controler">
       <section class="iconBox">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-collection"></use>
+        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
+          <use xlink:href="#icon-heart"></use>
         </svg>
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-addto"></use>
+        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
+          <use xlink:href="#icon-folder-add"></use>
         </svg>
       </section>
       <div class="progressBar" ref="progressBar" @mouseover="circleVisible = true" @mouseleave="circleVisible = false">
@@ -227,8 +227,8 @@ export default class Player extends Vue {
   display: flex;
   flex-direction: column;
   .discBox {
-    width: 330px;
-    height: 330px;
+    width: 48vh;
+    height: 48vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -270,8 +270,8 @@ export default class Player extends Vue {
       margin-bottom: 20px;
       .icon {
         fill: #ffffff;
-        width: 32px;
-        height: 32px;
+        width: 25px;
+        height: 25px;
       }
     }
     .progressBar {
