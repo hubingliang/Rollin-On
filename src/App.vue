@@ -1,14 +1,16 @@
 <template>
-  <div id="app">
+  <div id="app" :style="{ color: PlayerModule.fontColor }">
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { PlayerModule } from '@/store/modules/player'
 
 @Component
 export default class App extends Vue {
+  PlayerModule = PlayerModule
   newChannel: string = ''
   async created() {
     this.login()
@@ -43,7 +45,6 @@ export default class App extends Vue {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
   height: 100vh;
   width: 100vw;
   overflow: hidden;

@@ -3,7 +3,7 @@
     <div class="carousel">
       <Item class="item">
         <section @click="toListDetail('daily-recommendation')">
-          <div>
+          <div :style="{ background: PlayerModule.color }">
             <span>{{ new Date().getDate() }}</span>
           </div>
           <p>日推</p>
@@ -24,6 +24,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { styler, decay, listen, pointer, value, transform } from 'popmotion'
 import { clamp } from '@popmotion/popcorn'
 import posed from 'vue-pose'
+import { PlayerModule } from '@/store/modules/player'
+
 
 @Component({
   components: {
@@ -52,6 +54,7 @@ import posed from 'vue-pose'
   },
 })
 export default class App extends Vue {
+  PlayerModule = PlayerModule
   playList: any[] = []
   mounted() {
     this.getPlayList()
@@ -145,6 +148,7 @@ export default class App extends Vue {
       overflow: hidden;
       text-overflow: ellipsis;
       font-weight: bold;
+      color: #2c3e50;
     }
   }
 }

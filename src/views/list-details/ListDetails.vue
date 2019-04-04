@@ -125,9 +125,6 @@ export default class DailyRecommendation extends Vue {
   .title {
     padding-left: 15px;
     margin-bottom: 20px;
-    h1 {
-      color: white;
-    }
   }
   .wrapper {
     overflow-x: scroll;
@@ -156,7 +153,6 @@ export default class DailyRecommendation extends Vue {
         animation-fill-mode: forwards;
       }
       .song {
-        color: #ffffff;
         display: flex;
         flex-wrap: nowrap;
         position: relative;

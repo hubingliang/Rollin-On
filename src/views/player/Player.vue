@@ -30,20 +30,33 @@
           <use xlink:href="#icon-addto"></use>
         </svg>
       </section>
-      <div class="progressBar" ref="progressBar">
-        <div class="complete" :style="{ width: playOut + 'px' }"></div>
-        <div class="circle" :style="{ transform: 'translateX(' + playOut + 'px)' }" ref="circle"></div>
+      <div class="progressBar" ref="progressBar" @mouseover="circleVisible = true" @mouseleave="circleVisible = false">
+        <div class="complete" :style="{ width: playOut + 'px', background: color }"></div>
+        <div
+          :pose="circleVisible ? 'visible' : 'hidden'"
+          class="circle"
+          :style="{ transform: 'translateX(' + playOut + 'px)', background: color }"
+          ref="circle"
+        ></div>
       </div>
     </section>
   </section>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { Vue, Component, Prop } from 'vue-property-decorator'
 import { styler, spring, inertia, listen, pointer, value, calc } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
+import posed from 'vue-pose'
 
-@Component
+@Component({
+  components: {
+    Box: posed.div({
+      visible: { opacity: 1 },
+      hidden: { opacity: 0 },
+    }),
+  },
+})
 export default class Player extends Vue {
   PlayerModule = PlayerModule
   audio: any = null
@@ -51,6 +64,11 @@ export default class Player extends Vue {
   ProgressBar: any = 0
   raf: any = null
   currentLocation: number = 0
+  color: string = ''
+  circleVisible: boolean = false
+  created() {
+    this.color = PlayerModule.color
+  }
   mounted() {
     this.audio = this.$refs.audio
     this.ProgressBar = this.$refs.progressBar
@@ -274,11 +292,10 @@ export default class Player extends Vue {
         border-radius: 5px;
       }
       .circle {
-        background: #ffffff;
         background: #6dc1f9;
         border-radius: 50%;
         margin-right: 15px;
-        flex: 0 0 20px;
+        width: 20px;
         height: 20px;
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
       }

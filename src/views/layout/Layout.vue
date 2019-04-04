@@ -1,40 +1,93 @@
 <template>
-  <section class="app-wrapper" ref="layout">
+  <section class="app-wrapper" ref="layout" :style="{ background: PlayerModule.background }">
     <player></player>
     <router-view />
+    <section class="theme-color" @click="isVisible = !isVisible">{{ PlayerModule.backgroundName }} Rollin</section>
+    <Sidebar class="color-list" :pose="isVisible ? 'visible' : 'hidden'">
+      <Item class="color" v-for="(themeColor, index) in themeColorList" :key="index">
+        <p
+          @click="
+            PlayerModule.initThemeColor(themeColor)
+            isVisible = false
+          "
+        >
+          {{ themeColor.name }}
+        </p>
+      </Item>
+    </Sidebar>
   </section>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Player from '@/views/player/Player.vue'
 import { keyframes, easing, styler } from 'popmotion'
+import { getColor } from '365color/dist'
+import { PlayerModule } from '@/store/modules/player'
+import posed from 'vue-pose'
+import { type } from 'os'
+
+interface IThemeColor {
+  background: string
+  name: string
+  type: string
+}
 
 @Component({
   components: {
     Player,
+    Sidebar: posed.div({
+      visible: {
+        x: 0,
+        beforeChildren: true,
+        staggerChildren: 30,
+      },
+      hidden: {
+        // x: '100%',
+        afterChildren: true,
+      },
+    }),
+    Item: posed.div({
+      visible: { opacity: 1, y: 0 },
+      hidden: { opacity: 0, y: 20 },
+    }),
   },
 })
 export default class Layout extends Vue {
-  mounted() {
-    this.initLayout()
+  isVisible: boolean = false
+  PlayerModule = PlayerModule
+  themeColorList: IThemeColor[] = [
+    { background: 'linear-gradient(to bottom, #f7bb97, #dd5e89)', name: 'V a p o r w a v e', type: 'dark' },
+    { background: 'linear-gradient(to bottom, #F45C43, #EB3349)', name: 'Cherry', type: 'dark' },
+    { background: 'linear-gradient(to bottom, #93F9B9, #1D976C)', name: 'Mojito', type: 'light' },
+    { background: 'linear-gradient(to bottom, #FFC837, #FF8008)', name: 'Juicy Orange', type: 'light' },
+    { background: 'linear-gradient(to bottom, #71B280, #134E5E)', name: 'Moss', type: 'dark' },
+    { background: 'linear-gradient(to bottom, #414345, #232526)', name: 'Midnight City', type: 'dark' },
+    { background: 'linear-gradient(to bottom, #93EDC7, #1CD8D2)', name: 'Sea Blizz', type: 'light' },
+    { background: 'linear-gradient(to bottom, #FFFFFF, #ECE9E6)', name: 'Clouds', type: 'light' },
+    { background: 'linear-gradient(to bottom, #F3A183, #EC6F66)', name: 'Bourbon', type: 'dark' },
+  ]
+  created() {
+    PlayerModule.initColor(getColor())
+    this.getThemeColor()
   }
-  initLayout() {
-    const layout: any = styler(this.$refs.layout as HTMLElement)
-    keyframes({
-      values: ['#FF1C68', '#14D790', '#198FE3', '#FF1C68'],
-      duration: 10000,
-      ease: easing.linear,
-      loop: Infinity,
-    }).start(layout.set('background'))
+  getThemeColor() {
+    const themeColor = localStorage.getItem('themeColor') as string
+    console.log(JSON.parse(themeColor))
+    if (themeColor) {
+      PlayerModule.initThemeColor(JSON.parse(themeColor))
+    } else {
+      PlayerModule.initThemeColor({
+        background: 'linear-gradient(to bottom, #f7bb97, #dd5e89)',
+        name: 'V a p o r w a v e',
+        type: 'dark',
+      })
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .app-wrapper {
-  background: #eb3349; /* fallback for old browsers */
-  background: -webkit-linear-gradient(to bottom, #f45c43, #eb3349); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(to bottom, #f45c43, #eb3349); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   width: 145.5vh;
   height: 90vh;
   border-radius: 10px;
@@ -42,5 +95,21 @@ export default class Layout extends Vue {
   justify-content: center;
   align-items: center;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+  position: relative;
+  .theme-color {
+    user-select: none;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    font-weight: bold;
+  }
+  .color-list {
+    user-select: none;
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    .color {
+    }
+  }
 }
 </style>
