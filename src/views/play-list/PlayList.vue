@@ -26,7 +26,6 @@ import { clamp } from '@popmotion/popcorn'
 import posed from 'vue-pose'
 import { PlayerModule } from '@/store/modules/player'
 
-
 @Component({
   components: {
     Item: posed.div({

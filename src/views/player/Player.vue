@@ -23,8 +23,11 @@
     </section>
     <section class="controler" ref="controler">
       <section class="iconBox">
-        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
+        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="switchLike(true)" v-if="!isLike">
           <use xlink:href="#icon-heart"></use>
+        </svg>
+        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="switchLike(false)" v-if="isLike">
+          <use xlink:href="#icon-heart-fill"></use>
         </svg>
         <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
           <use xlink:href="#icon-folder-add"></use>
@@ -66,8 +69,10 @@ export default class Player extends Vue {
   currentLocation: number = 0
   color: string = ''
   circleVisible: boolean = false
+  likeListIds: number[] = []
   created() {
     this.color = PlayerModule.color
+    this.getLikeList()
   }
   mounted() {
     this.audio = this.$refs.audio
@@ -75,6 +80,30 @@ export default class Player extends Vue {
     this.initDisc()
     this.initProgressBar()
     this.updateProgress()
+  }
+  get isLike() {
+    if (PlayerModule.song) {
+      const song = PlayerModule.song as any
+      const matched = this.likeListIds.filter((_: any) => {
+        return _ === song.id
+      })
+      if (matched.length > 0) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return false
+    }
+  }
+  async getLikeList() {
+    try {
+      const user = JSON.parse(sessionStorage.getItem('user') as string)
+      const { data } = await this.$http.get(`/likelist?uid=${user.id}`)
+      this.likeListIds = data.ids
+    } catch (e) {
+      alert(e)
+    }
   }
   updateProgress() {
     this.playOut = (this.audio.currentTime / this.audio.duration) * this.ProgressBar.offsetWidth
@@ -211,6 +240,19 @@ export default class Player extends Vue {
       requestAnimationFrame(this.updateProgress)
     })
   }
+  async switchLike(like: boolean) {
+    try {
+      if (PlayerModule.song) {
+        const song = PlayerModule.song as any
+        await this.$http.get(`/like?id=${song.id}&like=${like}`)
+        this.getLikeList()
+      } else {
+        alert('当前没有播放歌曲')
+      }
+    } catch (e) {
+      alert(e)
+    }
+  }
 }
 </script>
 
@@ -297,7 +339,7 @@ export default class Player extends Vue {
         margin-right: 15px;
         width: 15px;
         height: 15px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       }
     }
   }

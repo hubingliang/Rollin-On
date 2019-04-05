@@ -42,7 +42,6 @@ interface IThemeColor {
         staggerChildren: 30,
       },
       hidden: {
-        // x: '100%',
         afterChildren: true,
       },
     }),
@@ -67,13 +66,9 @@ export default class Layout extends Vue {
     { background: 'linear-gradient(to bottom, #F3A183, #EC6F66)', name: 'Bourbon', type: 'dark' },
     { background: 'linear-gradient(to right, #3A6073, #16222A)', name: 'Mirage', type: 'dark' },
     { background: 'linear-gradient(to top, #DD2476, #FF512F)', name: 'Bloody Mary', type: 'dark' },
-    { background: 'linear-gradient(to top, #ffdde1, #ee9ca7)', name: 'Piggy Pink', type: 'light' },
-    { background: 'linear-gradient(to top, #6dd5ed, #2193b0)', name: 'Cool Blues', type: 'light' },
-
-
-
-
-
+    { background: 'linear-gradient(to top, #ee9ca7, #ffdde1)', name: 'Piggy Pink', type: 'light' },
+    { background: 'linear-gradient(to top, #2193b0, #6dd5ed)', name: 'Cool Blues', type: 'light' },
+    { background: '#3db6e3', name: 'Zima Blue', type: 'dark' },
 
 
   ]
@@ -83,7 +78,6 @@ export default class Layout extends Vue {
   }
   getThemeColor() {
     const themeColor = localStorage.getItem('themeColor') as string
-    console.log(JSON.parse(themeColor))
     if (themeColor) {
       PlayerModule.initThemeColor(JSON.parse(themeColor))
     } else {
