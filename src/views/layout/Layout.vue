@@ -15,6 +15,11 @@
         </p>
       </Item>
     </Sidebar>
+    <a href="https://github.com/hubingliang/Rollin-On" target="_blank">
+      <svg class="github" aria-hidden="true">
+        <use xlink:href="#icon-github"></use>
+      </svg>
+    </a>
   </section>
 </template>
 <script lang="ts">
@@ -69,8 +74,6 @@ export default class Layout extends Vue {
     { background: 'linear-gradient(to top, #ee9ca7, #ffdde1)', name: 'Piggy Pink', type: 'light' },
     { background: 'linear-gradient(to top, #2193b0, #6dd5ed)', name: 'Cool Blues', type: 'light' },
     { background: '#3db6e3', name: 'Zima Blue', type: 'dark' },
-
-
   ]
   created() {
     PlayerModule.initColor(getColor())
@@ -101,6 +104,13 @@ export default class Layout extends Vue {
   align-items: center;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   position: relative;
+  .github {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 25px;
+    height: 25px;
+  }
   .theme-color {
     user-select: none;
     position: absolute;
