@@ -1,20 +1,26 @@
 <template>
   <section class="player">
     <section ref="disc" class="discBox">
-      <img class="disc" src="@/assets/disc-plus.png" alt="" />
+      <img class="disc" src="@/assets/disc-plus.png" alt>
       <img
         class="disc_light"
-        :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
+        :class="{
+                    play: PlayerModule.isPlay,
+                    paused: !PlayerModule.isPlay,
+                }"
         src="@/assets/disc_light-plus.png"
-        alt=""
+        alt
         id="disc"
-      />
+      >
       <img
         class="cover"
-        :class="{ play: PlayerModule.isPlay, paused: !PlayerModule.isPlay }"
+        :class="{
+                    play: PlayerModule.isPlay,
+                    paused: !PlayerModule.isPlay,
+                }"
         id="cover"
         :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
-      />
+      >
       <audio
         ref="audio"
         id="audio"
@@ -23,26 +29,58 @@
     </section>
     <section class="controler" ref="controler">
       <section class="iconBox">
-        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="switchLike(true)" v-if="!isLike">
+        <svg
+          class="icon"
+          aria-hidden="true"
+          :style="{ fill: PlayerModule.fontColor }"
+          @click="switchLike(true)"
+          v-if="!isLike"
+        >
           <use xlink:href="#icon-heart"></use>
         </svg>
-        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="switchLike(false)" v-if="isLike">
+        <svg
+          class="icon"
+          aria-hidden="true"
+          :style="{ fill: PlayerModule.fontColor }"
+          @click="switchLike(false)"
+          v-if="isLike"
+        >
           <use xlink:href="#icon-heart-fill"></use>
         </svg>
-        <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
+        <svg
+          class="icon"
+          aria-hidden="true"
+          :style="{ fill: PlayerModule.fontColor }"
+          @click="showCollect()"
+        >
           <use xlink:href="#icon-folder-add"></use>
         </svg>
       </section>
-      <div class="progressBar" ref="progressBar" @mouseover="circleVisible = true" @mouseleave="circleVisible = false">
+      <div
+        class="progressBar"
+        ref="progressBar"
+        @mouseover="circleVisible = true"
+        @mouseleave="circleVisible = false"
+      >
         <div class="complete" :style="{ width: playOut + 'px', background: color }"></div>
         <div
           :pose="circleVisible ? 'visible' : 'hidden'"
           class="circle"
-          :style="{ transform: 'translateX(' + (playOut - 2) + 'px)', background: color }"
+          :style="{
+                        transform: 'translateX(' + (playOut - 2) + 'px)',
+                        background: color,
+                    }"
           ref="circle"
         ></div>
       </div>
     </section>
+    <PoseTransition>
+      <Shade v-on:click.native="collectVisible = false" class="shade" v-if="collectVisible">
+        <Modal class="modal">
+          <song-list></song-list>
+        </Modal>
+      </Shade>
+    </PoseTransition>
   </section>
 </template>
 
@@ -50,13 +88,28 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { styler, spring, inertia, listen, pointer, value, calc } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
-import posed from 'vue-pose'
+import posed, { PoseTransition } from 'vue-pose'
+import SongList from '@/components/SongList.vue'
 
 @Component({
   components: {
-    Box: posed.div({
-      visible: { opacity: 1 },
-      hidden: { opacity: 0 },
+    SongList,
+    PoseTransition,
+    Shade: posed.div({
+      enter: {
+        opacity: 1,
+        beforeChildren: true,
+        transition: { duration: 200, ease: 'linear' },
+      },
+      exit: {
+        opacity: 0,
+        afterChildren: true,
+        transition: { duration: 200, ease: 'linear' },
+      },
+    }),
+    Modal: posed.div({
+      enter: { opacity: 1, z: 0 },
+      exit: { opacity: 0, z: -150 },
     }),
   },
 })
@@ -69,14 +122,15 @@ export default class Player extends Vue {
   currentLocation: number = 0
   color: string = ''
   circleVisible: boolean = false
+  collectVisible: boolean = false
   likeListIds: number[] = []
   created() {
     this.color = PlayerModule.color
-    this.getLikeList()
   }
   mounted() {
     this.audio = this.$refs.audio
     this.ProgressBar = this.$refs.progressBar
+    this.getLikeList()
     this.initDisc()
     this.initProgressBar()
     this.updateProgress()
@@ -127,6 +181,12 @@ export default class Player extends Vue {
     } else {
       this.audio.play()
       this.PlayerModule.switch(true)
+    }
+  }
+  showCollect() {
+    const song = PlayerModule.song as any
+    if (song && song.id) {
+      this.collectVisible = true
     }
   }
   initDisc() {
@@ -301,7 +361,7 @@ export default class Player extends Vue {
   .controler {
     display: flex;
     justify-content: space-around;
-    padding: 20px 0;
+    padding: 4vh 0;
     width: 100%;
     flex-direction: column;
     align-items: center;
@@ -309,7 +369,7 @@ export default class Player extends Vue {
       width: 60%;
       display: flex;
       justify-content: space-around;
-      margin-bottom: 20px;
+      margin-bottom: 4vh;
       .icon {
         fill: #ffffff;
         width: 25px;
@@ -342,6 +402,24 @@ export default class Player extends Vue {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       }
     }
+  }
+  .shade {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    perspective: 500px;
+    transform: translateZ(0);
+    z-index: 4;
+  }
+  .modal {
+    background: white;
+    border-radius: 10px;
   }
 }
 </style>

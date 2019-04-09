@@ -11,7 +11,7 @@
       </Item>
       <Item class="item" v-for="item in playList" v-bind:key="item.id">
         <section @click="toListDetail(item.id)">
-          <img v-lazy="item.coverImgUrl" />
+          <img v-lazy="item.coverImgUrl">
           <p>{{ item.name }}</p>
         </section>
       </Item>
@@ -57,31 +57,6 @@ export default class App extends Vue {
   playList: any[] = []
   mounted() {
     this.getPlayList()
-    // this.init()
-  }
-  init() {
-    const slider: any = document.querySelector('.carousel')
-    const divStyler: any = styler(slider)
-    const sliderX: any = value(0, divStyler.set('x'))
-
-    listen(slider, 'mousedown touchstart').start((e: any) => {
-      // console.log(e)
-      pointer({ x: sliderX.get() })
-        .pipe(({ x }: any) => clamp(-(this.playList.length * 255), 0, x))
-        .start(sliderX)
-    })
-
-    listen(document, 'mouseup touchend').start((e: any) => {
-      decay({
-        from: sliderX.get(),
-        // velocity: sliderX.getVelocity(),
-        // power: 0.8,
-        // timeConstant: 1400,
-        // restDelta: 0.5,
-        // modifyTarget: (v: any) => Math.round(v / 100) * 100,
-      }).start(sliderX)
-      // .while((v) => v > 600)
-    })
   }
   async getPlayList() {
     try {
