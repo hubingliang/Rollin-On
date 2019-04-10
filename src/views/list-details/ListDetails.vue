@@ -5,13 +5,17 @@
     </Item>
     <section class="wrapper">
       <Item class="item" v-for="(song, index) in playList" v-bind:key="song.id">
-        <img class="disc" src="@/assets/disc-plus.png" :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }" />
+        <img
+          class="disc"
+          src="@/assets/disc-plus.png"
+          :class="{ show: song.isDiscShow, hidden: !song.isDiscShow }"
+        >
         <section
           class="song"
           @mouseover="song.isDiscShow = true"
           @mouseleave="song.isDiscShow = false"
         >
-          <img v-lazy="song.al.picUrl" @click="updatePlayer({ song: song, index: index })"/>
+          <img v-lazy="song.al.picUrl" @click="updatePlayer({ song: song, index: index })">
           <section class="details">
             <p class="name">{{ song.name }}</p>
             <span class="author">{{ song.ar[0].name }}</span>
@@ -120,10 +124,11 @@ export default class DailyRecommendation extends Vue {
 .sidebar {
   // background: #54e365;
   margin-left: 100px;
-  height: 70vh;
+  height: 74vh;
   .title {
     padding-left: 24px;
     margin-bottom: 20px;
+    max-width: 340px;
   }
   .wrapper {
     overflow-x: scroll;

@@ -1,8 +1,11 @@
 <template>
   <section class="app-wrapper" ref="layout" :style="{ background: PlayerModule.background }">
     <player></player>
-    <router-view />
-    <section class="theme-color" @click="isVisible = !isVisible">{{ PlayerModule.backgroundName }} Rollin</section>
+    <router-view/>
+    <section
+      class="theme-color"
+      @click="isVisible = !isVisible"
+    >{{ PlayerModule.backgroundName }} Rollin</section>
     <Sidebar class="color-list" :pose="isVisible ? 'visible' : 'hidden'">
       <Item class="color" v-for="(themeColor, index) in themeColorList" :key="index">
         <p
@@ -10,26 +13,25 @@
             PlayerModule.initThemeColor(themeColor)
             isVisible = false
           "
-        >
-          {{ themeColor.name }}
-        </p>
+        >{{ themeColor.name }}</p>
       </Item>
     </Sidebar>
     <a href="https://github.com/hubingliang/Rollin-On" target="_blank">
-      <svg class="github" aria-hidden="true">
+      <svg class="github" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }">
         <use xlink:href="#icon-github"></use>
       </svg>
     </a>
+    <search></search>
   </section>
 </template>
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import Player from '@/views/player/Player.vue'
+import Search from '@/components/Search.vue'
 import { keyframes, easing, styler } from 'popmotion'
 import { getColor } from '365color/dist'
 import { PlayerModule } from '@/store/modules/player'
 import posed from 'vue-pose'
-import { type } from 'os'
 
 interface IThemeColor {
   background: string
@@ -40,6 +42,7 @@ interface IThemeColor {
 @Component({
   components: {
     Player,
+    Search,
     Sidebar: posed.div({
       visible: {
         x: 0,
@@ -61,8 +64,7 @@ export default class Layout extends Vue {
   PlayerModule = PlayerModule
   themeColorList: IThemeColor[] = [
     { background: 'linear-gradient(to bottom, #f7bb97, #dd5e89)', name: 'V a p o r w a v e', type: 'dark' },
-    // { background: 'linear-gradient(to bottom, #F45C43, #EB3349)', name: 'Cherry', type: 'dark' },
-    // { background: 'linear-gradient(to bottom, #93F9B9, #1D976C)', name: 'Mojito', type: 'light' },
+    { background: 'linear-gradient(to bottom, #F45C43, #EB3349)', name: 'Cherry', type: 'dark' },
     { background: 'linear-gradient(to bottom, #FFC837, #FF8008)', name: 'Juicy Orange', type: 'light' },
     { background: 'linear-gradient(to bottom, #71B280, #134E5E)', name: 'Moss', type: 'dark' },
     { background: 'linear-gradient(to bottom, #414345, #232526)', name: 'Midnight City', type: 'dark' },
@@ -73,7 +75,7 @@ export default class Layout extends Vue {
     { background: 'linear-gradient(to top, #DD2476, #FF512F)', name: 'Bloody Mary', type: 'dark' },
     { background: 'linear-gradient(to top, #ee9ca7, #ffdde1)', name: 'Piggy Pink', type: 'light' },
     { background: 'linear-gradient(to top, #2193b0, #6dd5ed)', name: 'Cool Blues', type: 'light' },
-    { background: '#3db6e3', name: 'Zima Blue', type: 'dark' },
+    { background: '#3db6e3', name: 'Zima Blue', type: 'light' },
   ]
   created() {
     PlayerModule.initColor(getColor())
