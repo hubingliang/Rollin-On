@@ -174,6 +174,17 @@ export default class Player extends Vue {
       PlayerModule.switch(true)
     })
   }
+  lastMusic() {
+    if (PlayerModule.playList[PlayerModule.songIndex - 1]) {
+      PlayerModule.updatePlayer({ song: PlayerModule.playList[PlayerModule.songIndex - 1], index: PlayerModule.songIndex - 1 })
+    } else {
+      PlayerModule.updatePlayer({ song: PlayerModule.playList[0], index: 0 })
+    }
+    this.$nextTick(() => {
+      this.audio.play()
+      PlayerModule.switch(true)
+    })
+  }
   switch() {
     if (this.PlayerModule.isPlay) {
       this.audio.pause()
@@ -210,7 +221,7 @@ export default class Player extends Vue {
           console.log('下一首')
         } else if (endY < -150) {
           console.log('上一首')
-          // this.lastMusic()
+          this.lastMusic()
         } else {
           console.log('播放')
           this.switch()
