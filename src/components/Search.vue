@@ -37,18 +37,12 @@ import posed from 'vue-pose'
 @Component({
   components: {
     Sidebar: posed.div({
-      visible: {
-        x: 0,
-        beforeChildren: true,
-        staggerChildren: 30,
-      },
-      hidden: {
-        afterChildren: true,
-      },
+      visible: { opacity: 1, y: 0 },
+      hidden: { opacity: 0, y: 0 },
     }),
     Item: posed.div({
       visible: { opacity: 1, y: 0 },
-      hidden: { opacity: 0, y: 20 },
+      hidden: { opacity: 0, y: 0 },
     }),
     Input: posed.div({
       visible: { opacity: 1, y: 0 },
@@ -130,19 +124,20 @@ export default class Search extends Vue {
       outline: none;
       margin-right: 10px;
       font-size: 16px;
-      width: 330px;
+      width: 280px;
     }
   }
   .suggest {
     position: absolute;
     right: 30px;
     top: 40px;
+    user-select: none;
     background: #ffffff;
     color: #333;
-    width: 330px;
-    padding: 10px;
+    width: 280px;
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    padding: 10px;
   }
 }
 </style>

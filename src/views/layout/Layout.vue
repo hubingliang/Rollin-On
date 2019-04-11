@@ -2,6 +2,7 @@
   <section class="app-wrapper" ref="layout" :style="{ background: PlayerModule.background }">
     <player></player>
     <router-view/>
+    <search></search>
     <section
       class="theme-color"
       @click="isVisible = !isVisible"
@@ -21,7 +22,6 @@
         <use xlink:href="#icon-github"></use>
       </svg>
     </a>
-    <search></search>
   </section>
 </template>
 <script lang="ts">
@@ -125,8 +125,6 @@ export default class Layout extends Vue {
     position: absolute;
     left: 20px;
     top: 40px;
-    .color {
-    }
   }
 }
 </style>
