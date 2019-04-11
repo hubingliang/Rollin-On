@@ -23,6 +23,11 @@ export default new Router({
           name: 'ListDetail',
           component: () => import('./views/list-details/ListDetails.vue'),
         },
+        {
+          path: 'daily-recommendation',
+          name: 'DailyRecommendation',
+          component: () => import('./views/list-details/ListDetails.vue'),
+        },
       ],
     },
     {

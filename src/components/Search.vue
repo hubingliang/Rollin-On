@@ -37,8 +37,15 @@ import posed from 'vue-pose'
 @Component({
   components: {
     Sidebar: posed.div({
-      visible: { opacity: 1, y: 0 },
-      hidden: { opacity: 0, y: 0 },
+      visible: {
+        x: 0,
+        beforeChildren: true,
+        staggerChildren: 30,
+      },
+      hidden: {
+        x: '120%',
+        afterChildren: true,
+      },
     }),
     Item: posed.div({
       visible: { opacity: 1, y: 0 },

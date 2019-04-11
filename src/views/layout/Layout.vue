@@ -50,6 +50,7 @@ interface IThemeColor {
         staggerChildren: 30,
       },
       hidden: {
+        x: '-120%',
         afterChildren: true,
       },
     }),
@@ -106,6 +107,7 @@ export default class Layout extends Vue {
   align-items: center;
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   position: relative;
+  overflow: hidden;
   .github {
     position: absolute;
     right: 20px;
