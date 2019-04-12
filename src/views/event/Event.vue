@@ -15,7 +15,7 @@
 
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { PlayerModule } from '@/store/modules/player'
 import posed from 'vue-pose'
 

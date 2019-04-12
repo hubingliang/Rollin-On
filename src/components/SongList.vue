@@ -3,8 +3,10 @@
     <Item class="list" v-for="(playList, index) in playLists" :key="index">
       <section @click="collect(playList.id)">
         <img v-lazy="playList.coverImgUrl">
-        <p>{{ playList.name }}</p>
-        <span> {{ playList.trackCount }} </span>
+        <section class="detail">
+          <p>{{ playList.name }}</p>
+          <span>{{ playList.trackCount }} songs</span>
+        </section>
       </section>
     </Item>
   </Sidebar>
@@ -12,7 +14,7 @@
 
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { PlayerModule } from '@/store/modules/player'
 import posed from 'vue-pose'
 
@@ -68,7 +70,9 @@ export default class SongList extends Vue {
       const { data } = await this.$http.get(`/playlist/tracks?op=add&pid=${listId}&tracks=${song.id}`)
       this.playLists = data.playlist
     } catch (e) {
-      alert(e)
+      // if (e.response.data.code === 502) {
+        console.log('ss')
+      // }
     }
   }
 }
@@ -96,14 +100,27 @@ export default class SongList extends Vue {
         width: 80px;
         height: 80px;
       }
-      p {
-        margin-left: 20px;
-        font-size: 16px;
-        width: 250px;
-        color: #333;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      .detail {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        p {
+          margin-left: 20px;
+          margin-bottom: 10px;
+          font-size: 16px;
+          width: 250px;
+          color: #333;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        span {
+          margin-left: 20px;
+          font-size: 14px;
+          width: 250px;
+          color: #8590a6;
+        }
       }
     }
   }

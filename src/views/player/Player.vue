@@ -85,7 +85,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator'
+import { Vue, Component } from 'vue-property-decorator'
 import { styler, spring, inertia, listen, pointer, value, calc } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
 import posed, { PoseTransition } from 'vue-pose'
@@ -425,10 +425,10 @@ export default class Player extends Vue {
     perspective: 500px;
     transform: translateZ(0);
     z-index: 4;
-  }
-  .modal {
-    background: white;
-    border-radius: 10px;
+    .modal {
+      background: white;
+      border-radius: 10px;
+    }
   }
 }
 </style>
