@@ -7,6 +7,7 @@
           <p>{{ event.nickname }}</p>
         </section>
       </section>
+      <article>{{ contentHandle(event.json) }}</article>
     </Item>
   </Sidebar>
 </template>
@@ -42,6 +43,10 @@ export default class Layout extends Vue {
   events: any[] = []
   created() {
     // this.getEvent()
+  }
+  contentHandle(json: string) {
+    const a = JSON.parse(json)
+    console.log(a)
   }
   async getEvent() {
     try {

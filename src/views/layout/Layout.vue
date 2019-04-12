@@ -22,6 +22,7 @@
         <use xlink:href="#icon-github"></use>
       </svg>
     </a>
+    <p class="song-name">{{ PlayerModule.song?PlayerModule.song.name: '' }}</p>
   </section>
 </template>
 <script lang="ts">
@@ -108,6 +109,18 @@ export default class Layout extends Vue {
   box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
+  .song-name {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%);
+    max-width: 400px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-weight: bold;
+  }
   .github {
     position: absolute;
     right: 20px;
@@ -126,7 +139,10 @@ export default class Layout extends Vue {
     user-select: none;
     position: absolute;
     left: 20px;
-    top: 40px;
+    top: 44px;
+    .color {
+      margin-bottom: 4px;
+    }
   }
 }
 </style>

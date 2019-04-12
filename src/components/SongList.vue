@@ -4,6 +4,7 @@
       <section @click="collect(playList.id)">
         <img v-lazy="playList.coverImgUrl">
         <p>{{ playList.name }}</p>
+        <span> {{ playList.trackCount }} </span>
       </section>
     </Item>
   </Sidebar>

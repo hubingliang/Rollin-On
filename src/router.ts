@@ -28,6 +28,11 @@ export default new Router({
           name: 'DailyRecommendation',
           component: () => import('./views/list-details/ListDetails.vue'),
         },
+        {
+          path: 'event',
+          name: 'Event',
+          component: () => import('./views/event/Event.vue'),
+        },
       ],
     },
     {

@@ -9,6 +9,7 @@
           color: PlayerModule.fontColor }"
           v-model="searchValue"
           @keyup="reloadSuggest"
+          @blur="isSuggestVisible = false"
         >
       </Input>
       <svg
@@ -22,7 +23,7 @@
     </section>
     <Sidebar class="suggest" :pose="isSuggestVisible ? 'visible': 'hidden'">
       <Item v-for="song in suggestSongList" :key="song.id">
-        <p @click="getSongDetails(song.id)">{{ song.name }}</p>
+        <SearchValue @click.native="getSongDetails(song.id)">{{ song.name }}</SearchValue>
       </Item>
     </Sidebar>
   </section>
@@ -43,7 +44,7 @@ import posed from 'vue-pose'
         staggerChildren: 30,
       },
       hidden: {
-        x: '120%',
+        x: '140%',
         afterChildren: true,
       },
     }),
@@ -52,8 +53,17 @@ import posed from 'vue-pose'
       hidden: { opacity: 0, y: 0 },
     }),
     Input: posed.div({
-      visible: { opacity: 1, y: 0 },
-      hidden: { opacity: 0, y: 0 },
+      visible: { opacity: 1, x: 0 },
+      hidden: { opacity: 0, x: '140%' },
+    }),
+    SearchValue: posed.p({
+      hoverable: true,
+      init: {
+        boxShadow: '0px 0px 0px rgba(0,0,0,0)',
+      },
+      hover: {
+        boxShadow: '0px 5px 10px rgba(0,0,0,0.2)',
+      },
     }),
   },
 })
@@ -131,7 +141,7 @@ export default class Search extends Vue {
       outline: none;
       margin-right: 10px;
       font-size: 16px;
-      width: 280px;
+      width: 140px;
     }
   }
   .suggest {
@@ -141,10 +151,18 @@ export default class Search extends Vue {
     user-select: none;
     background: #ffffff;
     color: #333;
-    width: 280px;
+    min-width: 140px;
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     padding: 10px;
+    p {
+      width: 100%;
+      margin-bottom: 4px;
+      padding: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 }
 </style>

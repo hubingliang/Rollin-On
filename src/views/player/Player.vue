@@ -218,12 +218,9 @@ export default class Player extends Vue {
       } else if (Math.abs(endX) < 100 && endX !== 0) {
         if (endY > 150) {
           this.nextMusic()
-          console.log('下一首')
         } else if (endY < -150) {
-          console.log('上一首')
           this.lastMusic()
         } else {
-          console.log('播放')
           this.switch()
         }
       } else if (endX < -100) {
@@ -339,6 +336,7 @@ export default class Player extends Vue {
 .player {
   display: flex;
   flex-direction: column;
+  user-select: none;
   .discBox {
     width: 48vh;
     height: 48vh;
