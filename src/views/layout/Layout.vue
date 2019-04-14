@@ -22,7 +22,9 @@
         <use xlink:href="#icon-github"></use>
       </svg>
     </a>
-    <p class="song-name">{{ PlayerModule.song?PlayerModule.song.name: '' }}</p>
+    <p
+      class="song-name"
+    >{{ PlayerModule.song?PlayerModule.song.name + ' - ' + artistHandle(PlayerModule.song.ar): '' }}</p>
   </section>
 </template>
 <script lang="ts">
@@ -79,6 +81,16 @@ export default class Layout extends Vue {
     PlayerModule.initColor(getColor())
     this.getThemeColor()
   }
+  artistHandle(artists: any[]) {
+    if (artists.length === 1) {
+      return artists[0].name
+    }
+    return artists
+      .reduce((names: string, _: any) => {
+        return names + `/${_.name}`
+      }, '')
+      .substring(1)
+  }
   getThemeColor() {
     const themeColor = localStorage.getItem('themeColor') as string
     if (themeColor) {
@@ -107,9 +119,8 @@ export default class Layout extends Vue {
   overflow: hidden;
   .song-name {
     position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translate(-50%);
+    bottom: 20px;
+    left: 20px;
     max-width: 400px;
     white-space: nowrap;
     overflow: hidden;

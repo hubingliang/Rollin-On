@@ -4,11 +4,7 @@
       <h1>{{ name ? name : '日推' }}</h1>
     </Item>
     <section class="wrapper">
-      <Item
-        class="item"
-        v-for="(song, index) in playList"
-        v-bind:key="song.id"
-      >
+      <Item class="item" v-for="(song, index) in playList" v-bind:key="song.id">
         <img
           class="disc"
           src="@/assets/disc-plus.png"
@@ -22,7 +18,7 @@
           <img v-lazy="song.al.picUrl" @click="updatePlayer({ song: song, index: index })">
           <section class="details">
             <p class="name">{{ song.name }}</p>
-            <span class="author">{{ song.ar[0].name }}</span>
+            <span class="author">{{ artistHandle(song.ar) }}</span>
           </section>
         </section>
       </Item>
@@ -65,6 +61,16 @@ export default class DailyRecommendation extends Vue {
   }
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
+  }
+  artistHandle(artists: any[]) {
+    if (artists.length === 1) {
+      return artists[0].name
+    }
+    return artists
+      .reduce((names: string, _: any) => {
+        return names + `/${_.name}`
+      }, '')
+      .substring(1)
   }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)

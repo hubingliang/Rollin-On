@@ -25,8 +25,8 @@ import { setTimeout } from 'timers'
       },
     }),
     Item: posed.div({
-      visible: { opacity: 1, y: 0 },
-      hidden: { opacity: 0, y: 0 },
+      visible: { opacity: 1, x: 0 },
+      hidden: { opacity: 0, x: '140%' },
     }),
   },
 })
@@ -50,6 +50,5 @@ export default class Notification extends Vue {
   position: fixed;
   right: 20px;
   top: 20px;
-  background: #ffffff;
 }
 </style>
