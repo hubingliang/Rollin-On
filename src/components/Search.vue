@@ -23,7 +23,9 @@
     </section>
     <Sidebar class="suggest" :pose="isSuggestVisible ? 'visible': 'hidden'">
       <Item v-for="song in suggestSongList" :key="song.id">
-        <SearchValue @click.native="getSongDetails(song.id)">{{ song.name }}</SearchValue>
+        <SearchValue @click.native="getSongDetails(song.id)">
+          <p>{{ song.name }} - {{ song.artists[0].name }}</p>
+        </SearchValue>
       </Item>
     </Sidebar>
   </section>

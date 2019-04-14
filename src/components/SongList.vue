@@ -1,15 +1,17 @@
 <template>
-  <Sidebar class="list-wrapper" :pose="isVisible ? 'visible' : 'hidden'">
-    <Item class="list" v-for="(playList, index) in playLists" :key="index">
-      <section @click="collect(playList.id)">
-        <img v-lazy="playList.coverImgUrl">
-        <section class="detail">
-          <p>{{ playList.name }}</p>
-          <span>{{ playList.trackCount }} songs</span>
+  <section>
+    <Sidebar class="list-wrapper" :pose="isVisible ? 'visible' : 'hidden'">
+      <Item class="list" v-for="(playList, index) in playLists" :key="index">
+        <section @click="collect(playList.id)">
+          <img v-lazy="playList.coverImgUrl">
+          <section class="detail">
+            <p>{{ playList.name }}</p>
+            <span>{{ playList.trackCount }} songs</span>
+          </section>
         </section>
-      </section>
-    </Item>
-  </Sidebar>
+      </Item>
+    </Sidebar>
+  </section>
 </template>
 
 
@@ -70,9 +72,9 @@ export default class SongList extends Vue {
       const { data } = await this.$http.get(`/playlist/tracks?op=add&pid=${listId}&tracks=${song.id}`)
       this.playLists = data.playlist
     } catch (e) {
-      // if (e.response.data.code === 502) {
-        console.log('ss')
-      // }
+      if (e.response.data.code === 502) {
+        this.$message('The song already exists.')
+      }
     }
   }
 }

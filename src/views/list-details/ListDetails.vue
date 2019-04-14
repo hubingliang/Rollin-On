@@ -4,7 +4,11 @@
       <h1>{{ name ? name : '日推' }}</h1>
     </Item>
     <section class="wrapper">
-      <Item class="item" v-for="(song, index) in playList" v-bind:key="song.id">
+      <Item
+        class="item"
+        v-for="(song, index) in playList"
+        v-bind:key="song.id"
+      >
         <img
           class="disc"
           src="@/assets/disc-plus.png"
