@@ -9,11 +9,32 @@
         </section>
       </section>
       <pre>{{ jsonHandle(event.json).msg }}</pre>
-      <section class="img-wrapper" v-if="event.pics.length">
-        <img v-lazy="item.pcSquareUrl" v-for="(item, index) in event.pics" v-bind:key="index" @click="currentImg = item.pcSquareUrl">
-        <img :src="currentImg" v-if="currentImg" class="current-img">
+      <section class="img-wrapper" v-if="!event.currentImg">
+        <img
+          v-lazy="item.pcSquareUrl"
+          v-for="(item, index) in event.pics"
+          v-bind:key="index"
+          @click="event.currentImg = item.originUrl"
+        >
       </section>
-      <video v-if="jsonHandle(event.json).video" :poster="jsonHandle(event.json).video.coverUrl"></video>
+      <img
+        :src="event.currentImg"
+        v-if="event.currentImg"
+        class="current-img"
+        @click="event.currentImg = null"
+      >
+      <section class="video" v-if="jsonHandle(event.json).video">
+        <img v-lazy="jsonHandle(event.json).video.coverUrl" v-if="!event.currentVideo">
+        <video :src="event.currentVideo" v-if="event.currentVideo" autoplay controls></video>
+        <svg
+          class="icon"
+          aria-hidden="true"
+          @click="getVideo(jsonHandle(event.json).video.videoId, event)"
+          v-if="!event.currentVideo"
+        >
+          <use xlink:href="#icon-play"></use>
+        </svg>
+      </section>
     </Item>
   </Sidebar>
 </template>
@@ -58,12 +79,24 @@ export default class Layout extends Vue {
   }
   jsonHandle(jsonString: string) {
     const json = JSON.parse(jsonString)
-    console.log(json)
     return json
+  }
+  async getVideo(videoId: string, event: any) {
+    try {
+      const { data } = await this.$http.get(`/video/url?id=${videoId}`)
+      event.currentVideo = data.urls[0].url
+    } catch (e) {
+      this.$message('error')
+    }
   }
   async getEvent() {
     try {
       const { data } = await this.$http.get(`/event`)
+      data.event.map((_: any) => {
+        _.currentImg = null
+        _.currentVideo = null
+        return _
+      })
       this.events = data.event
     } catch (e) {
       alert(e)
@@ -78,7 +111,7 @@ export default class Layout extends Vue {
   width: 560px;
   overflow: scroll;
   background: #ffffff;
-  margin-left: 40px;
+  margin-left: 100px;
   .event {
     padding: 20px;
     border-bottom: 1px solid rgb(229, 229, 229);
@@ -127,16 +160,37 @@ export default class Layout extends Vue {
         margin-right: 5px;
         margin-bottom: 5px;
       }
-      .current-img {
-        width: 315px;
-        height: 315px;
-      }
     }
-    video {
+    .current-img {
+      margin-left: 50px;
+      margin-top: 10px;
+      max-width: 315px;
+    }
+    .video {
       margin-left: 50px;
       margin-top: 10px;
       width: 365px;
       height: 200px;
+      position: relative;
+      video {
+        width: 365px;
+        height: 200px;
+        outline: none;
+      }
+      img {
+        width: 365px;
+        height: 200px;
+        border-radius: 12px;
+      }
+      .icon {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        fill: #ffffff;
+      }
     }
   }
 }
