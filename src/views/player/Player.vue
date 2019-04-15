@@ -232,7 +232,11 @@ export default class Player extends Vue {
           this.switch()
         }
       } else if (endX < -100) {
-        this.$router.push({ name: 'home' })
+        if (this.$route.name === 'Home') {
+          this.$router.push({ name: 'Event' })
+        } else {
+          this.$router.push({ name: 'Home' })
+        }
       }
       spring({
         from: ballXY.get(),
