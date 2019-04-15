@@ -62,16 +62,6 @@ export default class DailyRecommendation extends Vue {
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
   }
-  artistHandle(artists: any[]) {
-    if (artists.length === 1) {
-      return artists[0].name
-    }
-    return artists
-      .reduce((names: string, _: any) => {
-        return names + `/${_.name}`
-      }, '')
-      .substring(1)
-  }
   updatePlayer(song: any) {
     PlayerModule.updatePlayer(song)
     PlayerModule.updatePlayList(this.playList)

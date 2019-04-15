@@ -27,7 +27,7 @@
         :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
       ></audio>
     </section>
-    <section class="controler" ref="controler">
+    <section class="controler" ref="controler" :pose="circleVisible ? 'visible' : 'hidden'">
       <section class="iconBox">
         <svg
           class="icon"
@@ -64,7 +64,6 @@
       >
         <div class="complete" :style="{ width: playOut + 'px', background: color }"></div>
         <div
-          :pose="circleVisible ? 'visible' : 'hidden'"
           class="circle"
           :style="{
                         transform: 'translateX(' + (playOut - 2) + 'px)',
@@ -74,13 +73,7 @@
         ></div>
       </div>
     </section>
-    <PoseTransition>
-      <Shade v-on:click.native="collectVisible = false" class="shade" v-if="collectVisible">
-        <Modal class="modal">
-          <song-list></song-list>
-        </Modal>
-      </Shade>
-    </PoseTransition>
+    <Collect :collectVisible="collectVisible" @hiddenCollect="hiddenCollect"></Collect>
   </section>
 </template>
 
@@ -89,11 +82,11 @@ import { Vue, Component } from 'vue-property-decorator'
 import { styler, spring, inertia, listen, pointer, value, calc } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
 import posed, { PoseTransition } from 'vue-pose'
-import SongList from '@/components/SongList.vue'
+import Collect from '@/components/Collect.vue'
 
 @Component({
   components: {
-    SongList,
+    Collect,
     PoseTransition,
     Shade: posed.div({
       enter: {
@@ -110,6 +103,18 @@ import SongList from '@/components/SongList.vue'
     Modal: posed.div({
       enter: { opacity: 1, z: 0 },
       exit: { opacity: 0, z: -150 },
+    }),
+    Controler: posed.div({
+      enter: {
+        opacity: 1,
+        beforeChildren: true,
+        transition: { duration: 200, ease: 'linear' },
+      },
+      exit: {
+        opacity: 0,
+        afterChildren: true,
+        transition: { duration: 200, ease: 'linear' },
+      },
     }),
   },
 })
@@ -199,6 +204,9 @@ export default class Player extends Vue {
     if (song && song.id) {
       this.collectVisible = true
     }
+  }
+  hiddenCollect() {
+    this.collectVisible = false
   }
   initDisc() {
     const disc: any = this.$refs.disc
@@ -410,24 +418,6 @@ export default class Player extends Vue {
         height: 15px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       }
-    }
-  }
-  .shade {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    perspective: 500px;
-    transform: translateZ(0);
-    z-index: 4;
-    .modal {
-      background: white;
-      border-radius: 10px;
     }
   }
 }
