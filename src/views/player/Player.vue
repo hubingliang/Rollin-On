@@ -129,6 +129,7 @@ export default class Player extends Vue {
   circleVisible: boolean = false
   collectVisible: boolean = false
   likeListIds: number[] = []
+  moving: boolean = false
   created() {
     this.color = PlayerModule.color
   }
@@ -222,20 +223,38 @@ export default class Player extends Vue {
       const endX = ballXY.get().x
       const endY = ballXY.get().y
       if (endX > 100) {
+        if (this.moving) {
+          return
+        }
+        this.waitMoving()
         this.$router.push({ name: 'PlayList' })
       } else if (Math.abs(endX) < 100 && endX !== 0) {
         if (endY > 150) {
+          if (this.moving) {
+            return
+          }
+          this.waitMoving()
           this.nextMusic()
         } else if (endY < -150) {
+          if (this.moving) {
+            return
+          }
+          this.waitMoving()
           this.lastMusic()
         } else {
+          if (this.moving) {
+            return
+          }
+          this.waitMoving()
           this.switch()
         }
       } else if (endX < -100) {
         if (this.$route.name === 'Home') {
           this.$router.push({ name: 'Event' })
+          this.waitMoving()
         } else {
           this.$router.push({ name: 'Home' })
+          this.waitMoving()
         }
       }
       spring({
@@ -247,6 +266,12 @@ export default class Player extends Vue {
         // damping: 10
       }).start(ballXY)
     })
+  }
+  waitMoving() {
+    this.moving = true
+    setTimeout(() => {
+      this.moving = false
+    }, 2000)
   }
   initProgressBar() {
     const mix = calc.getValueFromProgress

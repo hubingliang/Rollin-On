@@ -10,7 +10,8 @@
       </section>
       <pre>{{ jsonHandle(event.json).msg }}</pre>
       <section class="img-wrapper" v-if="event.pics.length">
-        <img v-lazy="item.pcSquareUrl" v-for="(item, index) in event.pics" v-bind:key="index">
+        <img v-lazy="item.pcSquareUrl" v-for="(item, index) in event.pics" v-bind:key="index" @click="currentImg = item.pcSquareUrl">
+        <img :src="currentImg" v-if="currentImg" class="current-img">
       </section>
       <video v-if="jsonHandle(event.json).video" :poster="jsonHandle(event.json).video.coverUrl"></video>
     </Item>
@@ -46,6 +47,7 @@ export default class Layout extends Vue {
   isVisible: boolean = false
   PlayerModule = PlayerModule
   events: any[] = []
+  currentImg: string | null = null
   created() {
     this.getEvent()
   }
@@ -124,6 +126,10 @@ export default class Layout extends Vue {
         height: 100px;
         margin-right: 5px;
         margin-bottom: 5px;
+      }
+      .current-img {
+        width: 315px;
+        height: 315px;
       }
     }
     video {
