@@ -23,9 +23,9 @@ class Player extends VuexModule implements IPlayerState {
   backgroundName = ''
   fontColor = ''
   @Mutation
-  updatePlayer(song: any) {
-    this.song = song.song
-    this.songIndex = song.index
+  updatePlayer(song: any, index: number = this.songIndex) {
+    this.song = song
+    this.songIndex = index
   }
 
   @Mutation

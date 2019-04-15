@@ -15,7 +15,7 @@
           @mouseover="song.isDiscShow = true"
           @mouseleave="song.isDiscShow = false"
         >
-          <img v-lazy="song.al.picUrl" @click="updatePlayer({ song: song, index: index })">
+          <img v-lazy="song.al.picUrl" @click="updatePlayer(song, index)">
           <section class="details">
             <p class="name">{{ song.name }}</p>
             <span class="author">{{ artistHandle(song.ar) }}</span>
@@ -62,8 +62,8 @@ export default class DailyRecommendation extends Vue {
   mounted() {
     this.audio = document.getElementById('audio') as HTMLAudioElement
   }
-  updatePlayer(song: any) {
-    PlayerModule.updatePlayer(song)
+  updatePlayer(song: any, index: number) {
+    PlayerModule.updatePlayer(song, index)
     PlayerModule.updatePlayList(this.playList)
     this.$nextTick(() => {
       this.audio.play()

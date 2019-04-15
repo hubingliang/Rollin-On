@@ -8,7 +8,14 @@
           <span>{{ timeHandle(event.eventTime) }}</span>
         </section>
       </section>
-      <pre>{{ jsonHandle(event.json).msg }}</pre>
+      <pre>{{ event.content.msg }}</pre>
+      <section class="song" v-if="event.content.song" @click="updatePlayer(event.content.song)">
+        <img v-lazy="event.content.song.album.img80x80">
+        <section class="detail">
+          <p>{{ event.content.song.name }}</p>
+          <span>{{ artistHandle(event.content.song.artists) }}</span>
+        </section>
+      </section>
       <section class="img-wrapper" v-if="!event.currentImg">
         <img
           v-lazy="item.pcSquareUrl"
@@ -23,7 +30,7 @@
         class="current-img"
         @click="event.currentImg = null"
       >
-      <section class="video" v-if="jsonHandle(event.json).video">
+      <section class="video" v-if="event.content.video">
         <img v-lazy="jsonHandle(event.json).video.coverUrl" v-if="!event.currentVideo">
         <video :src="event.currentVideo" v-if="event.currentVideo" autoplay controls></video>
         <svg
@@ -69,6 +76,8 @@ export default class Layout extends Vue {
   PlayerModule = PlayerModule
   events: any[] = []
   currentImg: string | null = null
+  audio: HTMLAudioElement = document.getElementById('audio') as HTMLAudioElement
+
   created() {
     this.getEvent()
   }
@@ -76,6 +85,7 @@ export default class Layout extends Vue {
     setTimeout(() => {
       this.isVisible = true
     }, 0)
+    this.audio = document.getElementById('audio') as HTMLAudioElement
   }
   jsonHandle(jsonString: string) {
     const json = JSON.parse(jsonString)
@@ -95,12 +105,25 @@ export default class Layout extends Vue {
       data.event.map((_: any) => {
         _.currentImg = null
         _.currentVideo = null
+        _.content = this.jsonHandle(_.json)
         return _
       })
       this.events = data.event
     } catch (e) {
       alert(e)
     }
+  }
+  updatePlayer(song: any) {
+    song.al = {
+      picUrl: song.album.picUrl,
+    }
+    song.ar = [{ name: song.artists[0].name }]
+    song.isDiscShow = false
+    PlayerModule.updatePlayer(song)
+    this.$nextTick(() => {
+      this.audio.play()
+      PlayerModule.switch(true)
+    })
   }
 }
 </script>
@@ -112,6 +135,7 @@ export default class Layout extends Vue {
   overflow: scroll;
   background: #ffffff;
   margin-left: 100px;
+  color: #616770;
   .event {
     padding: 20px;
     border-bottom: 1px solid rgb(229, 229, 229);
@@ -133,7 +157,6 @@ export default class Layout extends Vue {
         }
         span {
           font-size: 13px;
-          color: #616770;
         }
       }
     }
@@ -146,6 +169,35 @@ export default class Layout extends Vue {
       font-size: 15px;
       width: 470px;
       color: rgb(44, 62, 80);
+    }
+    .song {
+      display: flex;
+      width: 470px;
+      height: 60px;
+      margin-left: 50px;
+      margin-top: 10px;
+      background: #616770;
+      align-items: center;
+      color: #ffffff;
+      padding-left: 5px;
+      img {
+        width: 50px;
+        height: 50px;
+      }
+      .detail {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        p {
+          width: 400px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+    .song:hover {
+      background: #365899;
     }
     .img-wrapper {
       display: flex;

@@ -171,9 +171,9 @@ export default class Player extends Vue {
   }
   nextMusic() {
     if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
-      PlayerModule.updatePlayer({ song: PlayerModule.playList[PlayerModule.songIndex + 1], index: PlayerModule.songIndex + 1 })
+      PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex + 1], PlayerModule.songIndex + 1)
     } else {
-      PlayerModule.updatePlayer({ song: PlayerModule.playList[0], index: 0 })
+      PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
     }
     this.$nextTick(() => {
       this.audio.play()
@@ -182,9 +182,9 @@ export default class Player extends Vue {
   }
   lastMusic() {
     if (PlayerModule.playList[PlayerModule.songIndex - 1]) {
-      PlayerModule.updatePlayer({ song: PlayerModule.playList[PlayerModule.songIndex - 1], index: PlayerModule.songIndex - 1 })
+      PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex - 1], PlayerModule.songIndex - 1)
     } else {
-      PlayerModule.updatePlayer({ song: PlayerModule.playList[0], index: 0 })
+      PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
     }
     this.$nextTick(() => {
       this.audio.play()
@@ -215,6 +215,9 @@ export default class Player extends Vue {
     const ballXY: any = value({ x: 0, y: 0 }, divStyler.set)
     this.audio.onended = () => this.nextMusic()
     listen(disc, 'mousedown touchstart').start((e: any) => {
+      if (this.moving) {
+        return
+      }
       e.preventDefault()
       pointer(ballXY.get()).start(ballXY)
     })
@@ -271,7 +274,7 @@ export default class Player extends Vue {
     this.moving = true
     setTimeout(() => {
       this.moving = false
-    }, 2000)
+    }, 1000)
   }
   initProgressBar() {
     const mix = calc.getValueFromProgress

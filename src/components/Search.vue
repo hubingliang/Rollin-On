@@ -113,7 +113,7 @@ export default class Search extends Vue {
   }
   updatePlayer(song: any) {
     const audio = document.getElementById('audio') as HTMLAudioElement
-    PlayerModule.updatePlayer({ song, index: PlayerModule.songIndex })
+    PlayerModule.updatePlayer(song)
     this.$nextTick(() => {
       audio.play()
       PlayerModule.switch(true)
