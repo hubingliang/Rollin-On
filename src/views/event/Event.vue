@@ -95,6 +95,7 @@ export default class Layout extends Vue {
     try {
       const { data } = await this.$http.get(`/video/url?id=${videoId}`)
       event.currentVideo = data.urls[0].url
+      this.switch()
     } catch (e) {
       this.$message('error')
     }
@@ -125,13 +126,17 @@ export default class Layout extends Vue {
       PlayerModule.switch(true)
     })
   }
+  switch() {
+    this.audio.pause()
+    this.PlayerModule.switch(false)
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .event-wrapper {
   height: 74vh;
-  width: 560px;
+  width: 64vh;
   overflow: scroll;
   background: #ffffff;
   margin-left: 100px;
@@ -167,12 +172,12 @@ export default class Layout extends Vue {
       margin-top: 6px;
       margin-left: 50px;
       font-size: 15px;
-      width: 470px;
+      width: calc(64vh - 80px);
       color: rgb(44, 62, 80);
     }
     .song {
       display: flex;
-      width: 470px;
+      width: calc(64vh - 80px);
       height: 60px;
       margin-left: 50px;
       margin-top: 10px;
@@ -189,7 +194,7 @@ export default class Layout extends Vue {
         flex-direction: column;
         margin-left: 10px;
         p {
-          width: 400px;
+          width: calc(64vh - 90px);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
