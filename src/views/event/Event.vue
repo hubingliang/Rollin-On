@@ -101,7 +101,7 @@ export default class Layout extends Vue {
   }
   async getEvent() {
     try {
-      const { data } = await this.$http.get(`/event`)
+      const { data } = await this.$http.get(`/event?timestamp=${new Date().getTime()}`)
       data.event.map((_: any) => {
         _.currentImg = null
         _.currentVideo = null
@@ -176,9 +176,9 @@ export default class Layout extends Vue {
       height: 60px;
       margin-left: 50px;
       margin-top: 10px;
-      background: #616770;
+      background: #eff3f6;
       align-items: center;
-      color: #ffffff;
+      color: rgb(44, 62, 80);
       padding-left: 5px;
       img {
         width: 50px;
@@ -197,7 +197,7 @@ export default class Layout extends Vue {
       }
     }
     .song:hover {
-      background: #365899;
+      background: #e6ebf1;
     }
     .img-wrapper {
       display: flex;
