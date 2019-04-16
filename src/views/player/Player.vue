@@ -170,15 +170,19 @@ export default class Player extends Vue {
     this.raf = requestAnimationFrame(this.updateProgress)
   }
   nextMusic() {
-    if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
-      PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex + 1], PlayerModule.songIndex + 1)
+    if (PlayerModule.playList) {
+      if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
+        PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex + 1], PlayerModule.songIndex + 1)
+      } else {
+        PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
+      }
+      this.$nextTick(() => {
+        this.audio.play()
+        PlayerModule.switch(true)
+      })
     } else {
-      PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
+      return
     }
-    this.$nextTick(() => {
-      this.audio.play()
-      PlayerModule.switch(true)
-    })
   }
   lastMusic() {
     if (PlayerModule.playList[PlayerModule.songIndex - 1]) {
