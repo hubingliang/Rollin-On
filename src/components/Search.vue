@@ -113,10 +113,10 @@ export default class Search extends Vue {
   }
   updatePlayer(song: any) {
     const audio = document.getElementById('audio') as HTMLAudioElement
-    PlayerModule.updatePlayer(song)
+    PlayerModule.changeState([{ key: 'song', value: song }, { key: 'songIndex', value: PlayerModule.songIndex }])
     this.$nextTick(() => {
       audio.play()
-      PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     })
     this.isSuggestVisible = false
   }

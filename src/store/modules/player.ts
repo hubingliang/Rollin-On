@@ -12,8 +12,14 @@ export interface IPlayerState {
   fontColor: string
 }
 
+export interface IData {
+  key: string
+  value: any
+}
+
 @Module({ dynamic: true, store, name: 'player' })
 class Player extends VuexModule implements IPlayerState {
+  [index: string]: any
   song = null
   isPlay = false
   playList = []
@@ -22,20 +28,16 @@ class Player extends VuexModule implements IPlayerState {
   background = ''
   backgroundName = ''
   fontColor = ''
-  @Mutation
-  updatePlayer(song: any, index: number = this.songIndex) {
-    this.song = song
-    this.songIndex = index
-  }
 
   @Mutation
-  switch(newStatus: boolean) {
-    this.isPlay = newStatus
-  }
-
-  @Mutation
-  initColor(color: string) {
-    this.color = color
+  changeState(payload: IData | IData[]) {
+    if (Object.prototype.toString.call(payload) === '[object Array]') {
+      (payload as IData[]).map((_: IData) => {
+        this[_.key] = _.value
+      })
+    } else {
+      this[(payload as IData).key] = (payload as IData).value
+    }
   }
 
   @Mutation
@@ -48,11 +50,6 @@ class Player extends VuexModule implements IPlayerState {
     } else {
       this.fontColor = '#2c3e50'
     }
-  }
-
-  @Mutation
-  updatePlayList(playList: any) {
-    this.playList = playList
   }
 }
 

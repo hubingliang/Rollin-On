@@ -63,11 +63,14 @@ export default class DailyRecommendation extends Vue {
     this.audio = document.getElementById('audio') as HTMLAudioElement
   }
   updatePlayer(song: any, index: number) {
-    PlayerModule.updatePlayer(song, index)
-    PlayerModule.updatePlayList(this.playList)
+    PlayerModule.changeState([
+      { key: 'song', value: song },
+      { key: 'songIndex', value: index },
+      { key: 'playList', value: this.playList },
+    ])
     this.$nextTick(() => {
       this.audio.play()
-      PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     })
   }
   async getPlayList() {

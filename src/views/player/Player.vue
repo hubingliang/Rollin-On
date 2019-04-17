@@ -53,13 +53,16 @@ export default class Player extends Vue {
   nextMusic() {
     if (PlayerModule.playList) {
       if (PlayerModule.playList[PlayerModule.songIndex + 1]) {
-        PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex + 1], PlayerModule.songIndex + 1)
+        PlayerModule.changeState([
+          { key: 'song', value: PlayerModule.playList[PlayerModule.songIndex + 1] },
+          { key: 'songIndex', value: PlayerModule.songIndex + 1 },
+        ])
       } else {
-        PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
+        PlayerModule.changeState([{ key: 'song', value: PlayerModule.playList[0] }, { key: 'songIndex', value: 0 }])
       }
       this.$nextTick(() => {
         this.audio.play()
-        PlayerModule.switch(true)
+        PlayerModule.changeState({ key: 'isPlay', value: true })
       })
     } else {
       return
@@ -67,22 +70,25 @@ export default class Player extends Vue {
   }
   lastMusic() {
     if (PlayerModule.playList[PlayerModule.songIndex - 1]) {
-      PlayerModule.updatePlayer(PlayerModule.playList[PlayerModule.songIndex - 1], PlayerModule.songIndex - 1)
+      PlayerModule.changeState([
+        { key: 'song', value: PlayerModule.playList[PlayerModule.songIndex - 1] },
+        { key: 'songIndex', value: PlayerModule.songIndex - 1 },
+      ])
     } else {
-      PlayerModule.updatePlayer(PlayerModule.playList[0], 0)
+      PlayerModule.changeState([{ key: 'song', value: PlayerModule.playList[0] }, { key: 'songIndex', value: 0 }])
     }
     this.$nextTick(() => {
       this.audio.play()
-      PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     })
   }
   switch() {
     if (this.PlayerModule.isPlay) {
       this.audio.pause()
-      this.PlayerModule.switch(false)
+      this.PlayerModule.changeState({ key: 'isPlay', value: false })
     } else {
       this.audio.play()
-      this.PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     }
   }
   initDisc() {

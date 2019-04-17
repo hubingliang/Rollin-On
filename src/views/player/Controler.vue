@@ -132,10 +132,10 @@ export default class Player extends Vue {
   switch() {
     if (this.PlayerModule.isPlay) {
       this.audio.pause()
-      this.PlayerModule.switch(false)
+      this.PlayerModule.changeState({ key: 'isPlay', value: false })
     } else {
       this.audio.play()
-      this.PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     }
   }
   showCollect() {

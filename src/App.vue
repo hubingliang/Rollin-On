@@ -15,7 +15,7 @@ export default class App extends Vue {
   newChannel: string = ''
   async created() {
     this.login()
-    PlayerModule.initColor(getColor())
+    PlayerModule.changeState({ key: 'color', value: getColor() })
   }
   async login() {
     const { data } = await this.$http.get('/login/cellphone?phone=15620688207&password=aqgy3602')

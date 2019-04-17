@@ -120,15 +120,15 @@ export default class Layout extends Vue {
     }
     song.ar = [{ name: song.artists[0].name }]
     song.isDiscShow = false
-    PlayerModule.updatePlayer(song)
+    PlayerModule.changeState([{ key: 'song', value: song }, { key: 'songIndex', value: PlayerModule.songIndex }])
     this.$nextTick(() => {
       this.audio.play()
-      PlayerModule.switch(true)
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
     })
   }
   switch() {
     this.audio.pause()
-    this.PlayerModule.switch(false)
+    this.PlayerModule.changeState({ key: 'isPlay', value: false })
   }
 }
 </script>
