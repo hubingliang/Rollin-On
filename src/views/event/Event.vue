@@ -186,6 +186,7 @@ export default class Layout extends Vue {
       color: rgb(44, 62, 80);
       padding-left: 5px;
       img {
+        user-select: none;
         width: 50px;
         height: 50px;
       }
@@ -194,7 +195,13 @@ export default class Layout extends Vue {
         flex-direction: column;
         margin-left: 10px;
         p {
-          width: calc(64vh - 90px);
+          width: calc(64vh - 160px);
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        span {
+          width: calc(64vh - 160px);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;

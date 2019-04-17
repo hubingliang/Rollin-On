@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { PlayerModule } from '@/store/modules/player'
-import { getColor } from '365color/dist'
+import getColor from '365color/dist'
 
 @Component
 export default class App extends Vue {
