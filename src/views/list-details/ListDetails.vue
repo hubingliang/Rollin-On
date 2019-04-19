@@ -95,7 +95,7 @@ export default class DailyRecommendation extends Vue {
         })
       }
     } catch (e) {
-      alert(e)
+      this.$message()
     } finally {
       this.isVisible = !this.isVisible
     }

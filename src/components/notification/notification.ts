@@ -23,7 +23,7 @@ notifier.install = (Vue: any) => {
     document.body.appendChild(messageEl)
   }
   // 在Vue的原型上添加实例方法，以全局调用
-  Vue.prototype.$message = (massage: string) => {
+  Vue.prototype.$message = (massage: string = 'Network error') => {
     initInstance()
     messageBox.message = massage
   }

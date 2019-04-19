@@ -64,7 +64,7 @@ export default class App extends Vue {
       const { data } = await this.$http.get(`/user/playlist?uid=${user.id}`)
       this.playList = data.playlist
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   toListDetail(id: string) {

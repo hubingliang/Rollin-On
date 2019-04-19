@@ -100,7 +100,7 @@ export default class Search extends Vue {
         this.isSuggestVisible = true
       }
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   async getSongDetails(id: number) {
@@ -108,7 +108,7 @@ export default class Search extends Vue {
       const { data } = await this.$http.get(`/song/detail?ids=${id}`)
       this.updatePlayer(data.songs[0])
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   updatePlayer(song: any) {

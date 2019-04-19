@@ -122,7 +122,7 @@ export default class Player extends Vue {
       const { data } = await this.$http.get(`/likelist?uid=${user.id}`)
       this.likeListIds = data.ids
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   updateProgress() {
@@ -226,10 +226,10 @@ export default class Player extends Vue {
         await this.$http.get(`/like?id=${song.id}&like=${like}`)
         this.getLikeList()
       } else {
-        alert('当前没有播放歌曲')
+        this.$message('当前没有播放歌曲')
       }
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
 }

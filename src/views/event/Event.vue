@@ -104,14 +104,18 @@ export default class Layout extends Vue {
     try {
       const { data } = await this.$http.get(`/event?timestamp=${new Date().getTime()}`)
       data.event.map((_: any) => {
-        _.currentImg = null
+        if (_.pics.length === 1) {
+          _.currentImg = _.pics[0].originUrl
+        } else {
+          _.currentImg = null
+        }
         _.currentVideo = null
         _.content = this.jsonHandle(_.json)
         return _
       })
       this.events = data.event
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   updatePlayer(song: any) {

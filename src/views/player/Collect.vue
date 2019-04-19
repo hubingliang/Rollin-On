@@ -83,7 +83,7 @@ export default class Collect extends Vue {
       })
       this.isVisible = true
     } catch (e) {
-      alert(e)
+      this.$message()
     }
   }
   async collect(listId: number) {
