@@ -1,6 +1,6 @@
 <template>
-  <PoseTransition>
-    <Shade v-on:click.native="$emit('hiddenCollect',false);" class="shade" v-if="collectVisible">
+  <PoseTransition v-if="collectVisible">
+    <Shade v-on:click.native="$emit('hiddenCollect',false);" class="shade">
       <Modal class="modal">
         <Sidebar class="list-wrapper" :pose="isVisible ? 'visible' : 'hidden'">
           <Item class="list" v-for="(playList, index) in playLists" :key="index">

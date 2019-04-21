@@ -48,6 +48,7 @@ export default class Player extends Vue {
   moving: boolean = false
   mounted() {
     this.audio = this.$refs.audio
+    this.audio.volume = 0.5
     this.initDisc()
   }
   nextMusic() {

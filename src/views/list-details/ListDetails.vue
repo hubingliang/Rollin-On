@@ -20,6 +20,9 @@
             <p class="name">{{ song.name }}</p>
             <span class="author">{{ artistHandle(song.ar) }}</span>
           </section>
+          <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="unCollect(song.id)" v-if="$route.params.playListId">
+            <use xlink:href="#icon-delete"></use>
+          </svg>
         </section>
       </Item>
     </section>
@@ -76,7 +79,7 @@ export default class DailyRecommendation extends Vue {
   async getPlayList() {
     try {
       if (this.$route.params.playListId) {
-        const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}`)
+        const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}&timestamp=${new Date().getTime()}`)
         this.name = data.playlist.name
         this.playList = data.playlist.tracks.map((_: any) => {
           _.isDiscShow = false
@@ -97,7 +100,16 @@ export default class DailyRecommendation extends Vue {
     } catch (e) {
       this.$message()
     } finally {
-      this.isVisible = !this.isVisible
+      this.isVisible = true
+    }
+  }
+  async unCollect(songId: number) {
+    try {
+      console.log(songId)
+      const { data } = await this.$http.get(`/playlist/tracks?op=del&pid=${this.$route.params.playListId}&tracks=${songId}`)
+      await this.getPlayList()
+    } catch (e) {
+      this.$message(e)
     }
   }
 }
@@ -125,7 +137,6 @@ export default class DailyRecommendation extends Vue {
   }
 }
 .sidebar {
-  // background: #54e365;
   margin-left: 100px;
   height: 74vh;
   .title {
@@ -163,11 +174,11 @@ export default class DailyRecommendation extends Vue {
         display: flex;
         flex-wrap: nowrap;
         position: relative;
+        align-items: center;
         img {
           width: 80px;
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-          // box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
           user-select: none;
         }
         .details {
@@ -190,6 +201,17 @@ export default class DailyRecommendation extends Vue {
             overflow: hidden;
             text-overflow: ellipsis;
           }
+        }
+        .icon {
+          width: 25px;
+          height: 25px;
+          margin-right: 20px;
+          padding: 5px;
+        }
+        .icon:hover {
+          border-radius: 50%;
+          visibility: visible;
+          box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         }
       }
     }

@@ -3,7 +3,8 @@ import qs from 'query-string'
 import _Vue from 'vue'
 
 const instance = axios.create({
-  baseURL: 'http://148.70.94.248:3000/',
+  // baseURL: 'http://148.70.94.248:3000/',
+  baseURL: 'http://localhost:3000',
   timeout: 60000,
   paramsSerializer: (params) => {
     return qs.stringify(params)
