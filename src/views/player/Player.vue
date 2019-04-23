@@ -27,8 +27,8 @@
         :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
       ></audio>
     </section>
-    <Login></Login>
-    <Controler v-if="false"></Controler>
+    <Login v-if="!UserModule.isLogin"></Login>
+    <Controler v-if="UserModule.isLogin"></Controler>
   </section>
 </template>
 
@@ -39,6 +39,7 @@ import { PlayerModule } from '@/store/modules/player'
 import { UserModule } from '@/store/modules/user'
 import Controler from './Controler.vue'
 import Login from '@/components/Login.vue'
+
 
 @Component({
   components: {

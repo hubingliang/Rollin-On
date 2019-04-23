@@ -14,18 +14,10 @@
       v-model.number="verificationCode"
       v-if="isSend"
     >
-    <Wrapper
-      :pose="(isPhoneNumber && !isSend) ? 'visible' : 'hidden'"
-      v-if="(isPhoneNumber && !isSend)"
-      class="wrapper"
-    >
+    <Wrapper v-if="(isPhoneNumber && !isSend)" class="wrapper">
       <button @click="sendVerificationCode">发送验证码</button>
     </Wrapper>
-    <Wrapper
-      :pose="(isPhoneNumber && isSend) ? 'visible' : 'hidden'"
-      v-if="(isPhoneNumber && isSend)"
-      class="wrapper"
-    >
+    <Wrapper v-if="(isPhoneNumber && isSend)" class="wrapper">
       <button @click="login">登陆</button>
     </Wrapper>
   </section>
@@ -34,21 +26,18 @@
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
 import { PlayerModule } from '@/store/modules/player'
-import posed from 'vue-pose'
+import { UserModule } from '@/store/modules/user'
 
-@Component({
-  components: {
-    Wrapper: posed.div({
-      visible: { opacity: 1, y: 0 },
-      hidden: { opacity: 0, y: 0 },
-    }),
-  },
-})
+@Component
 export default class Login extends Vue {
   PlayerModule = PlayerModule
+  UserModule = UserModule
   phoneNumber: number | null = null
   verificationCode: string | null = null
   isSend: boolean = false
+  created() {
+    this.getUserData()
+  }
   get isPhoneNumber() {
     return (
       this.phoneNumber &&
@@ -67,9 +56,42 @@ export default class Login extends Vue {
   }
   async login() {
     try {
-      this.$http.get(`/captch/verify?phone=${this.phoneNumber}&captcha=${this.verificationCode}`)
+      await this.$http.get(`/captch/verify?phone=${this.phoneNumber}&captcha=${this.verificationCode}`)
+      this.getUserData()
     } catch (error) {
       this.$message('验证码不正确')
+    }
+  }
+  async getUserData() {
+    try {
+      const { data } = await this.$http.get('/login/status')
+      this.UserModule.changeState([
+        {
+          key: 'id',
+          value: data.profile.userId,
+        },
+        {
+          key: 'avatar',
+          value: data.profile.avatarUrl,
+        },
+        {
+          key: 'name',
+          value: data.profile.nickname,
+        },
+        {
+          key: 'isLogin',
+          value: true,
+        },
+      ])
+      console.log(data)
+      const user = {
+        id: data.profile.userId,
+        avatar: data.profile.avatarUrl,
+        name: data.profile.nickname,
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+    } catch (error) {
+      this.$message('需要登录')
     }
   }
 }
