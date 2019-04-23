@@ -75,7 +75,7 @@ export default class Collect extends Vue {
   }
   async getPlayList() {
     try {
-      const user = JSON.parse(sessionStorage.getItem('user') as string)
+      const user = JSON.parse(localStorage.getItem('user') as string)
       const { data } = await this.$http.get(`/user/playlist?uid=${user.id}`)
       data.playlist.shift()
       this.playLists = data.playlist.filter((_: any) => {
@@ -88,7 +88,7 @@ export default class Collect extends Vue {
   }
   async collect(listId: number) {
     try {
-      const user = JSON.parse(sessionStorage.getItem('user') as string)
+      const user = JSON.parse(localStorage.getItem('user') as string)
       const song = PlayerModule.song as any
       const { data } = await this.$http.get(`/playlist/tracks?op=add&pid=${listId}&tracks=${song.id}`)
       this.playLists = data.playlist

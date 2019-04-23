@@ -27,7 +27,8 @@
         :src="PlayerModule.song ? `https://music.163.com/song/media/outer/url?id=${PlayerModule.song.id}.mp3` : ''"
       ></audio>
     </section>
-    <Controler></Controler>
+    <Login></Login>
+    <Controler v-if="false"></Controler>
   </section>
 </template>
 
@@ -36,10 +37,12 @@ import { Vue, Component } from 'vue-property-decorator'
 import { styler, spring, listen, pointer, value } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
 import Controler from './Controler.vue'
+import Login from '@/components/Login.vue'
 
 @Component({
   components: {
     Controler,
+    Login,
   },
 })
 export default class Player extends Vue {

@@ -15,6 +15,7 @@ export default class App extends Vue {
   newChannel: string = ''
   async created() {
     this.login()
+    // this.refreshLogin()
     PlayerModule.changeState({ key: 'color', value: getColor() })
   }
   async login() {
@@ -26,7 +27,18 @@ export default class App extends Vue {
       name: data.profile.nickname,
       signature: data.profile.signature,
     }
-    sessionStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('user', JSON.stringify(user))
+  }
+  async refreshLogin() {
+    const { data } = await this.$http.get('/login/refresh')
+    // const user = {
+    //   id: data.account.id,
+    //   avatar: data.profile.avatarUrl,
+    //   background: data.profile.backgroundUrl,
+    //   name: data.profile.nickname,
+    //   signature: data.profile.signature,
+    // }
+    // localStorage.setItem('user', JSON.stringify(user))
   }
 }
 </script>

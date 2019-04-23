@@ -118,7 +118,7 @@ export default class Player extends Vue {
   }
   async getLikeList() {
     try {
-      const user = JSON.parse(sessionStorage.getItem('user') as string)
+      const user = JSON.parse(localStorage.getItem('user') as string)
       const { data } = await this.$http.get(`/likelist?uid=${user.id}`)
       this.likeListIds = data.ids
     } catch (e) {

@@ -60,7 +60,7 @@ export default class App extends Vue {
   }
   async getPlayList() {
     try {
-      const user = JSON.parse(sessionStorage.getItem('user') as string)
+      const user = JSON.parse(localStorage.getItem('user') as string)
       const { data } = await this.$http.get(`/user/playlist?uid=${user.id}&timestamp=${new Date().getTime()}`)
       this.playList = data.playlist
     } catch (e) {
