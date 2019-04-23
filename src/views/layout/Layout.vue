@@ -21,6 +21,7 @@ import Search from '@/components/Search.vue'
 import Theme from '@/components/Theme.vue'
 import { PlayerModule } from '@/store/modules/player'
 import posed from 'vue-pose'
+import getColor from '365color/dist'
 
 @Component({
   components: {
@@ -46,6 +47,9 @@ import posed from 'vue-pose'
 })
 export default class Layout extends Vue {
   PlayerModule = PlayerModule
+  created() {
+    PlayerModule.changeState({ key: 'color', value: getColor() })
+  }
 }
 </script>
 

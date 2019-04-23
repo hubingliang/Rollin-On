@@ -1,4 +1,4 @@
-import { VuexModule, Module, MutationAction, Mutation, Action, getModule } from 'vuex-module-decorators'
+import { VuexModule, Module, Mutation, getModule } from 'vuex-module-decorators'
 import store from '@/store'
 
 export interface IPlayerState {

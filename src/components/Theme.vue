@@ -69,11 +69,7 @@ export default class Theme extends Vue {
     if (themeColor) {
       PlayerModule.initThemeColor(JSON.parse(themeColor))
     } else {
-      PlayerModule.initThemeColor({
-        background: 'linear-gradient(to bottom, #f7bb97, #dd5e89)',
-        name: 'V a p o r w a v e',
-        type: 'dark',
-      })
+      PlayerModule.initThemeColor({ background: 'linear-gradient(to bottom, #FFFFFF, #ECE9E6)', name: 'Clouds', type: 'light' })
     }
   }
 }

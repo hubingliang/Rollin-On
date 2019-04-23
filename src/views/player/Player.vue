@@ -36,6 +36,7 @@
 import { Vue, Component } from 'vue-property-decorator'
 import { styler, spring, listen, pointer, value } from 'popmotion'
 import { PlayerModule } from '@/store/modules/player'
+import { UserModule } from '@/store/modules/user'
 import Controler from './Controler.vue'
 import Login from '@/components/Login.vue'
 
@@ -47,6 +48,7 @@ import Login from '@/components/Login.vue'
 })
 export default class Player extends Vue {
   PlayerModule = PlayerModule
+  UserModule = UserModule
   audio: any = null
   moving: boolean = false
   mounted() {
@@ -90,9 +92,11 @@ export default class Player extends Vue {
     if (this.PlayerModule.isPlay) {
       this.audio.pause()
       this.PlayerModule.changeState({ key: 'isPlay', value: false })
-    } else {
+    } else if (this.PlayerModule.song) {
       this.audio.play()
       this.PlayerModule.changeState({ key: 'isPlay', value: true })
+    } else {
+      this.$message('当前没有歌曲播放')
     }
   }
   initDisc() {
@@ -111,6 +115,18 @@ export default class Player extends Vue {
     listen(document, 'mouseup touchend').start(() => {
       const endX = ballXY.get().x
       const endY = ballXY.get().y
+
+      spring({
+        from: ballXY.get(),
+        velocity: ballXY.getVelocity(),
+        to: { x: 0, y: 0 },
+        stiffness: 200,
+        // mass: 1,
+        // damping: 10
+      }).start(ballXY)
+      if (!UserModule.isLogin) {
+        return
+      }
       if (endX > 100) {
         if (this.moving) {
           return
@@ -146,14 +162,6 @@ export default class Player extends Vue {
           this.waitMoving()
         }
       }
-      spring({
-        from: ballXY.get(),
-        velocity: ballXY.getVelocity(),
-        to: { x: 0, y: 0 },
-        stiffness: 200,
-        // mass: 1,
-        // damping: 10
-      }).start(ballXY)
     })
   }
   waitMoving() {
