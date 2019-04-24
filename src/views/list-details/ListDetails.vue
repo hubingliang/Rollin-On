@@ -213,6 +213,7 @@ export default class DailyRecommendation extends Vue {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            cursor: pointer;
           }
         }
         .icon {

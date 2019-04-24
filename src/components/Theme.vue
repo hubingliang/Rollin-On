@@ -84,6 +84,7 @@ export default class Theme extends Vue {
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
+  z-index: 4;
 }
 .color-list {
   user-select: none;

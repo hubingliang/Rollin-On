@@ -128,6 +128,7 @@ export default class Search extends Vue {
   position: absolute;
   right: 20px;
   top: 20px;
+  z-index: 4;
   .search-box {
     display: flex;
     align-items: center;

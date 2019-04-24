@@ -77,6 +77,7 @@ export default class Layout extends Vue {
     text-overflow: ellipsis;
     text-align: center;
     font-weight: bold;
+    z-index: 4;
   }
   .github {
     position: absolute;
@@ -85,6 +86,7 @@ export default class Layout extends Vue {
     width: 25px;
     height: 25px;
     cursor: pointer;
+    z-index: 4;
   }
 }
 </style>
