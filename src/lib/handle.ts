@@ -1,15 +1,24 @@
 import _Vue from 'vue'
 import dayjs from 'dayjs'
 
-function artistHandle(artists: any[]): string {
+function artistHandle(artists: any[]): string[] {
   if (artists.length === 1) {
-    return artists[0].name
+    return [artists[0].name]
   }
+  console.log(
+    artists
+      .reduce((names: string, _: any) => {
+        return names + `/${_.name}`
+      }, '')
+      .substring(1)
+      .split('/')
+  )
   return artists
     .reduce((names: string, _: any) => {
       return names + `/${_.name}`
     }, '')
     .substring(1)
+    .split('/')
 }
 
 function timeHandle(value: number, formatType: string = 'M月DD日 HH:mm'): string {

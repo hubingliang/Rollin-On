@@ -83,6 +83,7 @@ export default class Theme extends Vue {
   top: 20px;
   font-weight: bold;
   font-size: 16px;
+  cursor: pointer;
 }
 .color-list {
   user-select: none;
@@ -91,6 +92,7 @@ export default class Theme extends Vue {
   top: 44px;
   .color {
     margin-bottom: 4px;
+    cursor: pointer;
   }
 }
 </style>

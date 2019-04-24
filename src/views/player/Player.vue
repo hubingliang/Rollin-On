@@ -194,9 +194,11 @@ export default class Player extends Vue {
     justify-content: center;
     align-items: center;
     position: relative;
+    cursor: pointer;
     .disc_light {
       position: absolute;
       width: 48vh;
+      border-radius: 50%;
     }
     .disc {
       position: absolute;

@@ -18,9 +18,21 @@
           <img v-lazy="song.al.picUrl" @click="updatePlayer(song, index)">
           <section class="details">
             <p class="name">{{ song.name }}</p>
-            <span class="author">{{ artistHandle(song.ar) }}</span>
+            <span class="author">
+              <span
+                v-for="(item, index) in song.ar"
+                :key="index"
+                @click="$singer(item.id)"
+              >{{ item.name }}</span>
+            </span>
           </section>
-          <svg class="icon" aria-hidden="true" :style="{ fill: PlayerModule.fontColor }" @click="unCollect(song.id)" v-if="$route.params.playListId">
+          <svg
+            class="icon"
+            aria-hidden="true"
+            :style="{ fill: PlayerModule.fontColor }"
+            @click="unCollect(song.id)"
+            v-if="$route.params.playListId"
+          >
             <use xlink:href="#icon-delete"></use>
           </svg>
         </section>
@@ -79,7 +91,9 @@ export default class DailyRecommendation extends Vue {
   async getPlayList() {
     try {
       if (this.$route.params.playListId) {
-        const { data } = await this.$http.get(`/playlist/detail?id=${this.$route.params.playListId}&timestamp=${new Date().getTime()}`)
+        const { data } = await this.$http.get(
+          `/playlist/detail?id=${this.$route.params.playListId}&timestamp=${new Date().getTime()}`
+        )
         this.name = data.playlist.name
         this.playList = data.playlist.tracks.map((_: any) => {
           _.isDiscShow = false
@@ -89,10 +103,8 @@ export default class DailyRecommendation extends Vue {
         const { data } = await this.$http.get('/recommend/songs')
         this.name = data.name
         this.playList = data.recommend.map((_: any) => {
-          _.al = {
-            picUrl: _.album.picUrl,
-          }
-          _.ar = [{ name: _.artists[0].name }]
+          _.al = _.album
+          _.ar = _.artists
           _.isDiscShow = false
           return _
         })
@@ -180,6 +192,7 @@ export default class DailyRecommendation extends Vue {
           height: 80px;
           box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
           user-select: none;
+          cursor: pointer;
         }
         .details {
           margin-left: 20px;
@@ -211,7 +224,7 @@ export default class DailyRecommendation extends Vue {
         .icon:hover {
           border-radius: 50%;
           visibility: visible;
-          box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
         }
       }
     }

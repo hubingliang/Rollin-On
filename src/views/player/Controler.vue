@@ -255,6 +255,7 @@ export default class Player extends Vue {
       width: 25px;
       height: 25px;
       padding: 5px;
+      cursor: pointer;
     }
     .icon:hover {
       border-radius: 50%;
@@ -285,6 +286,7 @@ export default class Player extends Vue {
       width: 15px;
       height: 15px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      cursor: pointer;
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <section class="app-wrapper" ref="layout" :style="{ background: PlayerModule.background }">
+  <section class="app-wrapper" id="layout" ref="layout" :style="{ background: PlayerModule.background }">
     <player></player>
     <router-view/>
     <search></search>
@@ -50,6 +50,9 @@ export default class Layout extends Vue {
   created() {
     PlayerModule.changeState({ key: 'color', value: getColor() })
   }
+  mounted() {
+    // this.$singer(1233)
+  }
 }
 </script>
 
@@ -81,6 +84,7 @@ export default class Layout extends Vue {
     bottom: 20px;
     width: 25px;
     height: 25px;
+    cursor: pointer;
   }
 }
 </style>

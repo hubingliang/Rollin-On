@@ -134,6 +134,7 @@ export default class Search extends Vue {
     .search {
       width: 20px;
       height: 20px;
+      cursor: pointer;
     }
     .search-input {
       padding: 10px;

@@ -13,7 +13,13 @@
         <img v-lazy="event.content.song.album.img80x80">
         <section class="detail">
           <p>{{ event.content.song.name }}</p>
-          <span>{{ artistHandle(event.content.song.artists) }}</span>
+          <span>
+            <span
+              v-for="(item, index) in event.content.song.artists"
+              :key="index"
+              @click="$singer(item.id)"
+            >{{ item.name }}</span>
+          </span>
         </section>
       </section>
       <section class="img-wrapper" v-if="!event.currentImg">

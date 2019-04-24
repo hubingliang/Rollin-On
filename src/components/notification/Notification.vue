@@ -9,7 +9,6 @@
 <script lang="ts">
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import posed from 'vue-pose'
-import { setTimeout } from 'timers'
 
 @Component({
   components: {
