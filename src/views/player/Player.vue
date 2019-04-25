@@ -19,7 +19,7 @@
                     paused: !PlayerModule.isPlay,
                 }"
         id="cover"
-        :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://i.loli.net/2019/03/29/5c9cfd4e76a24.jpg'"
+        :src="PlayerModule.song ? PlayerModule.song.al.picUrl : 'https://source.unsplash.com/random/260x260'"
       >
       <audio
         ref="audio"
@@ -39,7 +39,6 @@ import { PlayerModule } from '@/store/modules/player'
 import { UserModule } from '@/store/modules/user'
 import Controler from './Controler.vue'
 import Login from '@/components/Login.vue'
-
 
 @Component({
   components: {

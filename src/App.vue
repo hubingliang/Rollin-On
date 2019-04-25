@@ -128,6 +128,9 @@ export default class App extends Vue {
   padding: 0;
   margin: 0;
 }
+*::-webkit-scrollbar {
+  width: 0 !important;
+}
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

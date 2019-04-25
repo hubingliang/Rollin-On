@@ -9,10 +9,20 @@
             <span v-if="singerData.artist.alias">{{ singerData.artist.alias[0] }}</span>
           </section>
         </section>
-        <section class="songs"></section>
+        <Sidebar class="songs">
+          <Song
+            v-for="(song,index) in currentSongs"
+            :key="index"
+            class="song"
+            @click="changeSong(song.id)"
+          >
+            <img v-lazy="song.al.picUrl">
+            <p>{{ song.name }}</p>
+          </Song>
+        </Sidebar>
         <section class="albums">
           <Item class="album" v-for="(album,index) in albumData" :key="index">
-            <img v-lazy="album.blurPicUrl">
+            <img v-lazy="album.blurPicUrl" @click="getAlbumSongs(album.id)">
             <p>{{ album.name }}</p>
             <span>{{ timeHandle(album.publishTime, 'YYYY-MM-DD') }}</span>
           </Item>
@@ -52,6 +62,21 @@ import { PlayerModule } from '@/store/modules/player'
         scale: 1.1,
       },
     }),
+    Sidebar: posed.div({
+      visible: {
+        x: 0,
+        beforeChildren: true,
+        staggerChildren: 30,
+      },
+      hidden: {
+        x: '-120%',
+        afterChildren: true,
+      },
+    }),
+    Song: posed.div({
+      visible: { opacity: 1, y: 0 },
+      hidden: { opacity: 0, y: 20 },
+    }),
   },
 })
 export default class Singer extends Vue {
@@ -60,12 +85,13 @@ export default class Singer extends Vue {
   PlayerModule = PlayerModule
   singerData: any = null
   albumData: any = null
+  currentSongs: any[] = []
   mounted() {
     this.isFullscreen = true
     PlayerModule.changeState({ key: 'fontColor', value: '#ffffff' })
     this.$nextTick(() => {
       this.getSingerData()
-      this.getAlbumData()
+      this.getAllAlbum()
     })
   }
   close() {
@@ -81,12 +107,12 @@ export default class Singer extends Vue {
     try {
       const { data } = await this.$http.get(`/artists?id=${this.singerId}`)
       this.singerData = data
-      console.log(data)
+      this.currentSongs = data.hotSongs
     } catch (error) {
       this.$message('获取歌手详情失败')
     }
   }
-  async getAlbumData() {
+  async getAllAlbum() {
     try {
       const { data } = await this.$http.get(`/artist/album?id=${this.singerId}`)
       console.log(data)
@@ -94,6 +120,23 @@ export default class Singer extends Vue {
     } catch (e) {
       this.$message('error')
     }
+  }
+  async getAlbumSongs(albumId: number) {
+    try {
+      const { data } = await this.$http.get(`/album?id=${albumId}`)
+      console.log(data)
+      this.currentSongs = data.songs
+    } catch (e) {
+      this.$message('error')
+    }
+  }
+  updatePlayer(song: any) {
+    const audio = document.getElementById('audio') as HTMLAudioElement
+    PlayerModule.changeState([{ key: 'song', value: song }, { key: 'songIndex', value: PlayerModule.songIndex }])
+    this.$nextTick(() => {
+      audio.play()
+      this.PlayerModule.changeState({ key: 'isPlay', value: true })
+    })
   }
 }
 </script>
@@ -111,6 +154,9 @@ export default class Singer extends Vue {
     justify-content: center;
     align-items: center;
     background: #333;
+    // background: linear-gradient(to left bottom, transparent 50%, rgba(0, 0, 0, 0.4) 0) 100% 0 no-repeat,
+    //   linear-gradient(-135deg, transparent 1.5em, #333 0);
+    // background-size: 2em 2em, auto;
     .wrapper {
       display: flex;
       justify-content: center;
@@ -140,8 +186,35 @@ export default class Singer extends Vue {
         }
       }
       .songs {
-        flex: 1;
         background: #ffffff;
+        display: flex;
+        color: #333;
+        flex-direction: column;
+        overflow: scroll;
+        padding-top: 17vh;
+        padding-left: 29vh;
+        flex-wrap: wrap;
+        height: 30vh;
+        .song {
+          display: flex;
+          align-items: center;
+          padding: 8px;
+          img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+          }
+          p {
+            font-weight: normal;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+        }
+        .song:hover {
+          box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
       }
       .albums {
         position: absolute;
