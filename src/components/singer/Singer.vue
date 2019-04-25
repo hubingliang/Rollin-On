@@ -118,7 +118,7 @@ export default class Singer extends Vue {
       console.log(data)
       this.albumData = data.hotAlbums
     } catch (e) {
-      this.$message('error')
+      this.$message('e')
     }
   }
   async getAlbumSongs(albumId: number) {
