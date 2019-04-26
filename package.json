@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "wechat": "node ./script/wechat.js"
   },
   "dependencies": {
     "365color": "^1.0.1",
