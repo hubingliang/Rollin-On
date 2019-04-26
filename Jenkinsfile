@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('build') {
+        stage('test') {
             steps {
                 nodejs(nodeJSInstallationName: 'v10.13.0') {
                   sh 'npm -version'
