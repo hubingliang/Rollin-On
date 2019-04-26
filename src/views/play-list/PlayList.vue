@@ -97,32 +97,36 @@ export default class App extends Vue {
     flex: 0 0 30vh;
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     user-select: none;
-    div {
-      width: 30vh;
-      border-radius: 5px 5px 0 0;
-      height: 30vh;
+    section {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #333;
-      span {
-        font-size: 80px;
-        color: #ffffff;
+      flex-direction: column;
+      div {
+        width: 30vh;
+        border-radius: 5px 5px 0 0;
+        height: 30vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #333;
+        span {
+          font-size: 80px;
+          color: #ffffff;
+        }
       }
-    }
-    img {
-      width: 30vh;
-      height: 30vh;
-      border-radius: 5px 5px 0 0;
-    }
-    p {
-      padding: 10px;
-      width: calc(30vh - 20px);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-weight: bold;
-      color: #2c3e50;
+      img {
+        width: 30vh;
+        height: 30vh;
+        border-radius: 5px 5px 0 0;
+      }
+      p {
+        padding: 10px;
+        width: calc(30vh - 20px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        color: #2c3e50;
+      }
     }
   }
 }

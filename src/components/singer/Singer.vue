@@ -1,12 +1,20 @@
 <template>
   <section class="singer">
-    <Box class="box" :pose="isFullscreen ? 'fullscreen' : 'thumbnail'" v-on:click.native="close">
+    <Box class="box" :pose="isFullscreen ? 'fullscreen' : 'thumbnail'">
       <section v-if="isFullscreen && singerData" class="wrapper">
         <section class="singer-detail">
           <img v-lazy="singerData.artist.img1v1Url">
           <section class="name">
             <p>{{ singerData.artist.name }}</p>
             <span v-if="singerData.artist.alias">{{ singerData.artist.alias[0] }}</span>
+            <svg
+              class="icon"
+              aria-hidden="true"
+              :style="{ fill: PlayerModule.fontColor }"
+              @click="close"
+            >
+              <use xlink:href="#icon-close-circle"></use>
+            </svg>
           </section>
         </section>
         <Sidebar class="songs">
@@ -14,7 +22,7 @@
             v-for="(song,index) in currentSongs"
             :key="index"
             class="song"
-            @click="changeSong(song.id)"
+            @click.native="updatePlayer(song)"
           >
             <img v-lazy="song.al.picUrl">
             <p>{{ song.name }}</p>
@@ -131,6 +139,7 @@ export default class Singer extends Vue {
     }
   }
   updatePlayer(song: any) {
+    console.log('ss')
     const audio = document.getElementById('audio') as HTMLAudioElement
     PlayerModule.changeState([{ key: 'song', value: song }, { key: 'songIndex', value: PlayerModule.songIndex }])
     this.$nextTick(() => {
