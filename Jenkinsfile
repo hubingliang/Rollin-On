@@ -8,6 +8,7 @@ pipeline {
                   sh 'npm install axios'
                   sh 'npm install'
                   sh 'npm run build'
+                  sh 'npm run wechat'
                 }
             }
         }
