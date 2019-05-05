@@ -123,7 +123,6 @@ export default class Singer extends Vue {
   async getAllAlbum() {
     try {
       const { data } = await this.$http.get(`/artist/album?id=${this.singerId}`)
-      console.log(data)
       this.albumData = data.hotAlbums
     } catch (e) {
       this.$message('e')
@@ -132,14 +131,12 @@ export default class Singer extends Vue {
   async getAlbumSongs(albumId: number) {
     try {
       const { data } = await this.$http.get(`/album?id=${albumId}`)
-      console.log(data)
       this.currentSongs = data.songs
     } catch (e) {
       this.$message('error')
     }
   }
   updatePlayer(song: any) {
-    console.log('ss')
     const audio = document.getElementById('audio') as HTMLAudioElement
     PlayerModule.changeState([{ key: 'song', value: song }, { key: 'songIndex', value: PlayerModule.songIndex }])
     this.$nextTick(() => {

@@ -183,7 +183,7 @@ export default class Player extends Vue {
     })
 
     listen(boundaries, 'mouseup touchend').start(() => {
-      console.log(boxX.get())
+      )
       if (boxX.get() === 0 || boxX.get() === this.currentLocation) {
         return
       } else if (boxX.get() < 0) {

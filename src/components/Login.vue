@@ -83,7 +83,6 @@ export default class Login extends Vue {
           value: true,
         },
       ])
-      console.log(data)
       const user = {
         id: data.profile.userId,
         avatar: data.profile.avatarUrl,

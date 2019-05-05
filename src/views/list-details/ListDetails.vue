@@ -117,7 +117,6 @@ export default class DailyRecommendation extends Vue {
   }
   async unCollect(songId: number) {
     try {
-      console.log(songId)
       const { data } = await this.$http.get(`/playlist/tracks?op=del&pid=${this.$route.params.playListId}&tracks=${songId}`)
       await this.getPlayList()
     } catch (e) {
