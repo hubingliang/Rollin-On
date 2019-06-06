@@ -29,6 +29,11 @@
           </Song>
         </Sidebar>
         <section class="albums">
+          <Item class="album">
+            <section @click="currentSongs = hotSongs">Top 50</section>
+            <p>Top 50</p>
+            <span>{{timeHandle(new Date().getTime() , 'YYYY-MM-DD')}}</span>
+          </Item>
           <Item class="album" v-for="(album,index) in albumData" :key="index">
             <img v-lazy="album.blurPicUrl" @click="getAlbumSongs(album.id)">
             <p>{{ album.name }}</p>
@@ -94,6 +99,7 @@ export default class Singer extends Vue {
   singerData: any = null
   albumData: any = null
   currentSongs: any[] = []
+  hotSongs: any[] = []
   mounted() {
     this.isFullscreen = true
     PlayerModule.changeState({ key: 'fontColor', value: '#ffffff' })
@@ -116,6 +122,7 @@ export default class Singer extends Vue {
       const { data } = await this.$http.get(`/artists?id=${this.singerId}`)
       this.singerData = data
       this.currentSongs = data.hotSongs
+      this.hotSongs = data.hotSongs
     } catch (error) {
       this.$message('获取歌手详情失败')
     }
@@ -235,6 +242,19 @@ export default class Singer extends Vue {
           color: #2c3e50;
           margin-right: 10px;
           padding-left: 10px;
+          section {
+            width: 18vh;
+            height: 18vh;
+            border-radius: 14px;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+            background: #616066;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+          }
           img {
             width: 18vh;
             height: 18vh;

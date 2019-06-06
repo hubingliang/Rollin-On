@@ -22,9 +22,26 @@
       </svg>
     </section>
     <Sidebar class="suggest" :pose="isSuggestVisible ? 'visible': 'hidden'">
+      <section class="suggest-title">
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-icon-test"></use>
+        </svg>
+        <span>单曲</span>
+      </section>
       <Item v-for="song in suggestSongList" :key="song.id">
         <SearchValue @click.native="getSongDetails(song.id)">
           <p>{{ song.name }} - {{ song.artists[0].name }}</p>
+        </SearchValue>
+      </Item>
+      <section>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-ren111"></use>
+        </svg>
+        <span>歌手</span>
+      </section>
+      <Item v-for="singer in suggestSingerList" :key="singer.id">
+        <SearchValue @click.native="$singer(singer.id)">
+          <p>{{ singer.name }}</p>
         </SearchValue>
       </Item>
     </Sidebar>
@@ -75,6 +92,7 @@ export default class Search extends Vue {
   isInputVisible: boolean = false
   timer: any = null
   suggestSongList: any[] = []
+  suggestSingerList: any[] = []
   isSuggestVisible: boolean = false
   reloadSuggest() {
     if (!this.searchValue) {
@@ -95,7 +113,9 @@ export default class Search extends Vue {
         return
       }
       const { data } = await this.$http.get(`/search/suggest?keywords=${this.searchValue}`)
+      console.log(data)
       this.suggestSongList = data.result.songs
+      this.suggestSingerList = data.result.artists
       if (this.suggestSongList && this.suggestSongList.length > 0) {
         this.isSuggestVisible = true
       }
@@ -159,6 +179,11 @@ export default class Search extends Vue {
     border-radius: 10px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     padding: 10px;
+    .suggest-title {
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+    }
     p {
       width: 100%;
       margin-bottom: 4px;

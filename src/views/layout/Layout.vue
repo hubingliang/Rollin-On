@@ -1,5 +1,10 @@
 <template>
-  <section class="app-wrapper" id="layout" ref="layout" :style="{ background: PlayerModule.background }">
+  <section
+    class="app-wrapper"
+    id="layout"
+    ref="layout"
+    :style="{ background: PlayerModule.background }"
+  >
     <player></player>
     <router-view/>
     <search></search>
@@ -12,6 +17,14 @@
     <p
       class="song-name"
     >{{ PlayerModule.song?PlayerModule.song.name + ' - ' + artistHandle(PlayerModule.song.ar): '' }}</p>
+    <svg
+      class="login-out"
+      aria-hidden="true"
+      :style="{ fill: PlayerModule.fontColor }"
+      @click="loginOut"
+    >
+      <use xlink:href="#icon-dengchutuichuguanbi"></use>
+    </svg>
   </section>
 </template>
 <script lang="ts">
@@ -20,6 +33,7 @@ import Player from '@/views/player/Player.vue'
 import Search from '@/components/Search.vue'
 import Theme from '@/components/Theme.vue'
 import { PlayerModule } from '@/store/modules/player'
+import { UserModule } from '@/store/modules/user'
 import posed from 'vue-pose'
 import getColor from '365color/dist'
 
@@ -47,8 +61,22 @@ import getColor from '365color/dist'
 })
 export default class Layout extends Vue {
   PlayerModule = PlayerModule
+  UserModule = UserModule
   created() {
     PlayerModule.changeState({ key: 'color', value: getColor() })
+  }
+  async loginOut() {
+    try {
+      await this.$http.get('/logout')
+      UserModule.changeState({
+        key: 'isLogin',
+        value: false,
+      })
+      this.$router.push({ name: 'Home' })
+      this.$message('退出登陆成功')
+    } catch (error) {
+      this.$message()
+    }
   }
   mounted() {
     // this.$singer(1233)
@@ -82,6 +110,15 @@ export default class Layout extends Vue {
   .github {
     position: absolute;
     right: 20px;
+    bottom: 20px;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    z-index: 4;
+  }
+  .login-out {
+    position: absolute;
+    right: 50px;
     bottom: 20px;
     width: 25px;
     height: 25px;

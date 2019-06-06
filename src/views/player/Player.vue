@@ -51,6 +51,7 @@ export default class Player extends Vue {
   UserModule = UserModule
   audio: any = null
   moving: boolean = false
+  fmSongs: any[] = []
   mounted() {
     this.audio = this.$refs.audio
     this.audio.volume = 0.5
@@ -71,7 +72,19 @@ export default class Player extends Vue {
         PlayerModule.changeState({ key: 'isPlay', value: true })
       })
     } else {
-      return
+      console.log(PlayerModule.songIndex)
+      if (PlayerModule.songIndex === 2) {
+        this.getPersonalFm()
+      } else {
+        PlayerModule.changeState([
+          { key: 'songIndex', value: PlayerModule.songIndex + 1 },
+          { key: 'song', value: this.fmSongs[PlayerModule.songIndex + 1] },
+        ])
+        this.$nextTick(() => {
+          this.audio.play()
+          PlayerModule.changeState({ key: 'isPlay', value: true })
+        })
+      }
     }
   }
   lastMusic() {
@@ -155,7 +168,8 @@ export default class Player extends Vue {
         }
       } else if (endX < -100) {
         if (this.$route.name === 'Home') {
-          this.$router.push({ name: 'Event' })
+          // this.$router.push({ name: 'Event' })
+          this.getPersonalFm()
           this.waitMoving()
         } else {
           this.$router.push({ name: 'Home' })
@@ -163,6 +177,29 @@ export default class Player extends Vue {
         }
       }
     })
+  }
+  async getPersonalFm() {
+    try {
+      const { data } = await this.$http.get(`/personal_fm?timestamp=${new Date().getTime()}`)
+      this.fmSongs = data.data.map((_: any) => {
+        _.al = _.album
+        _.ar = _.artists
+        _.isDiscShow = false
+        return _
+      })
+      console.log(this.fmSongs)
+      PlayerModule.changeState([
+        { key: 'playList', value: null },
+        { key: 'song', value: this.fmSongs[0] },
+        { key: 'songIndex', value: 0 },
+      ])
+      this.$nextTick(() => {
+        this.audio.play()
+        PlayerModule.changeState({ key: 'isPlay', value: true })
+      })
+    } catch (e) {
+      this.$message()
+    }
   }
   waitMoving() {
     this.moving = true

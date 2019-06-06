@@ -58,13 +58,17 @@ export default class Login extends Vue {
     try {
       await this.$http.get(`/captch/verify?phone=${this.phoneNumber}&captcha=${this.verificationCode}`)
       this.getUserData()
+      UserModule.changeState({
+        key: 'isLogin',
+        value: true,
+      })
     } catch (error) {
       this.$message('验证码不正确')
     }
   }
   async getUserData() {
     try {
-      const { data } = await this.$http.get('/login/status')
+      const { data } = await this.$http.get(`/login/status?timestamp=${new Date().getTime()}`)
       this.UserModule.changeState([
         {
           key: 'id',
