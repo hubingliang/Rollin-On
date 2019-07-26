@@ -100,7 +100,7 @@ export default class DailyRecommendation extends Vue {
           return _
         })
       } else {
-        const { data } = await this.$http.get('/recommend/songs')
+        const { data } = await this.$http.get(`/recommend/songs?timestamp=${new Date().getTime()}`)
         this.name = data.name
         this.playList = data.recommend.map((_: any) => {
           _.al = _.album

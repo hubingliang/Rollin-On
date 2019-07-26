@@ -3,23 +3,19 @@
     <input
       type="text"
       :style="{ borderBottom: '1px solid ' + PlayerModule.fontColor,}"
-      placeholder
+      placeholder="mobile number"
       v-model.number="phoneNumber"
-      v-if="!isSend"
-    >
+    />
     <input
       type="text"
       :style="{ borderBottom: '1px solid ' + PlayerModule.fontColor,}"
-      placeholder
-      v-model.number="verificationCode"
-      v-if="isSend"
-    >
-    <Wrapper v-if="(isPhoneNumber && !isSend)" class="wrapper">
-      <button @click="sendVerificationCode">发送验证码</button>
-    </Wrapper>
-    <Wrapper v-if="(isPhoneNumber && isSend)" class="wrapper">
-      <button @click="login">登陆</button>
-    </Wrapper>
+      placeholder="password"
+      v-model="password"
+      class="input"
+    />
+    <section class="wrapper">
+      <button @click="login">Login</button>
+    </section>
   </section>
 </template>
 
@@ -33,37 +29,16 @@ export default class Login extends Vue {
   PlayerModule = PlayerModule
   UserModule = UserModule
   phoneNumber: number | null = null
-  verificationCode: string | null = null
-  isSend: boolean = false
+  password: string | null = null
   created() {
     this.getUserData()
   }
-  get isPhoneNumber() {
-    return (
-      this.phoneNumber &&
-      `${this.phoneNumber}`.length === 11 &&
-      Object.prototype.toString.call(this.phoneNumber) === '[object Number]'
-    )
-  }
-  async sendVerificationCode() {
-    try {
-      await this.$http.get(`/captch/sent?phone=${this.phoneNumber}`)
-      this.$message('发送成功')
-      this.isSend = true
-    } catch (error) {
-      this.$message('发送失败')
-    }
-  }
   async login() {
     try {
-      await this.$http.get(`/captch/verify?phone=${this.phoneNumber}&captcha=${this.verificationCode}`)
+      await this.$http.get(`/login/cellphone?phone=${this.phoneNumber}&password=${this.password}`)
       this.getUserData()
-      UserModule.changeState({
-        key: 'isLogin',
-        value: true,
-      })
     } catch (error) {
-      this.$message('验证码不正确')
+      this.$message('password is wrong')
     }
   }
   async getUserData() {
@@ -118,6 +93,9 @@ export default class Login extends Vue {
     font-size: 16px;
     width: 140px;
     text-align: center;
+  }
+  .input {
+    margin: 20px 0;
   }
   .wrapper {
     margin-top: 20px;
