@@ -78,9 +78,6 @@ export default class Layout extends Vue {
       this.$message()
     }
   }
-  mounted() {
-    // this.$singer(1233)
-  }
 }
 </script>
 

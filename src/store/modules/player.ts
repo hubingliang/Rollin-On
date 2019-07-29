@@ -28,6 +28,7 @@ class Player extends VuexModule implements IPlayerState {
   background = ''
   backgroundName = ''
   fontColor = ''
+  collectList = []
 
   @Mutation
   changeState(payload: IData | IData[]) {

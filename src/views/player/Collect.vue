@@ -3,9 +3,9 @@
     <Shade v-on:click.native="$emit('hiddenCollect',false);" class="shade">
       <Modal class="modal">
         <Sidebar class="list-wrapper" :pose="isVisible ? 'visible' : 'hidden'">
-          <Item class="list" v-for="(playList, index) in playLists" :key="index">
+          <Item class="list" v-for="(playList, index) in PlayerModule.collectList" :key="index">
             <section @click="collect(playList.id)">
-              <img v-lazy="playList.coverImgUrl">
+              <img v-lazy="playList.coverImgUrl" />
               <section class="detail">
                 <p>{{ playList.name }}</p>
                 <span>{{ playList.trackCount }} songs</span>
@@ -70,7 +70,7 @@ export default class Collect extends Vue {
   PlayerModule = PlayerModule
   playLists: any[] = []
   isVisible: boolean = false
-  created() {
+  mounted() {
     this.getPlayList()
   }
   async getPlayList() {
@@ -78,9 +78,10 @@ export default class Collect extends Vue {
       const user = JSON.parse(localStorage.getItem('user') as string)
       const { data } = await this.$http.get(`/user/playlist?uid=${user.id}`)
       data.playlist.shift()
-      this.playLists = data.playlist.filter((_: any) => {
+      const playLists = data.playlist.filter((_: any) => {
         return _.subscribed === false
       })
+      PlayerModule.changeState({ key: 'collectList', value: playLists })
       this.isVisible = true
     } catch (e) {
       this.$message(e)
