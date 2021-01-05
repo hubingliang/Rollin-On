@@ -10,7 +10,7 @@
   "dependencies": {
     "365color": "^1.0.1",
     "@popmotion/popcorn": "^0.3.6",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "popmotion": "^8.6.8",
     "query-string": "^6.4.2",
     "register-service-worker": "^1.6.2",
